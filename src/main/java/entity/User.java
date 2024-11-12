@@ -16,6 +16,7 @@ public class User {
     @OneToMany(mappedBy = "user")
     private Set<Book> books;
     /*я не знаю, как ты будешь хранить избранных пользователей, но можно ведь так:
+    я пока тоже не знаю, мб каждый пользователь будет хранить избранное у себя в кэше
      @ManyToMany
     @JoinTable(
         name = "user_subscriptions",
