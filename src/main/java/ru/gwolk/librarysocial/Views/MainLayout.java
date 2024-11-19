@@ -54,9 +54,9 @@ public class MainLayout extends AppLayout {
         SideNav nav = new SideNav();
 
         nav.addItem(new SideNavItem("Пользователи", UsersListView.class,
-                VaadinIcon.BUILDING.create()));
-        nav.addItem(new SideNavItem("Подписки", FavouritesView.class,
-                VaadinIcon.BUILDING.create()));
+                VaadinIcon.USER.create()));
+        nav.addItem(new SideNavItem("Подписки", SubscriptionsView.class,
+                VaadinIcon.THUMBS_UP.create()));
 
         return nav;
     }

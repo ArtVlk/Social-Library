@@ -12,20 +12,20 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 import org.springframework.beans.factory.annotation.Autowired;
-import ru.gwolk.librarysocial.CRUDRepositories.ContactRepository;
-import ru.gwolk.librarysocial.Entities.Contact;
+import ru.gwolk.librarysocial.CRUDRepositories.UserRepository;
+import ru.gwolk.librarysocial.Entities.User;
 
 @SpringComponent
 @UIScope
-public class ContactEditor extends VerticalLayout implements KeyNotifier {
-    private final ContactRepository contactRepository;
-    private Contact contact;
+public class UserEditor extends VerticalLayout implements KeyNotifier {
+    private final UserRepository userRepository;
+    private User user;
     private TextField name = new TextField("Имя");
     private Button save = new Button("Сохранить", VaadinIcon.CHECK.create());
     private Button cancel = new Button("Отмена");
     private Button delete = new Button("Удалить", VaadinIcon.TRASH.create());
     private HorizontalLayout actions = new HorizontalLayout(save, cancel, delete);
-    private Binder<Contact> binder = new Binder<>(Contact.class);
+    private Binder<User> binder = new Binder<>(User.class);
     private ChangeHandler changeHandler;
 
     public void setChangeHandler(ChangeHandler changeHandler) {
@@ -37,8 +37,8 @@ public class ContactEditor extends VerticalLayout implements KeyNotifier {
     }
 
     @Autowired
-    public ContactEditor(ContactRepository contactRepository) {
-        this.contactRepository = contactRepository;
+    public UserEditor(UserRepository userRepository) {
+        this.userRepository = userRepository;
 
         add(name, actions);
         binder.bindInstanceFields(this);
@@ -52,35 +52,35 @@ public class ContactEditor extends VerticalLayout implements KeyNotifier {
 
         save.addClickListener(e -> save());
         delete.addClickListener(e -> delete());
-        cancel.addClickListener(e -> editContact(contact));
+        cancel.addClickListener(e -> editUser(user));
         setVisible(false);
     }
 
-    public void editContact(Contact newContact) {
-        if (newContact == null) {
+    public void editUser(User newUser) {
+        if (newUser == null) {
             setVisible(true);
             return;
         }
 
-        if (newContact.getId() != null) {
-            this.contact = contactRepository.findById(newContact.getId()).orElse(newContact);
+        if (newUser.getId() != null) {
+            this.user = userRepository.findById(newUser.getId()).orElse(newUser);
         }
         else {
-            this.contact = newContact;
+            this.user = newUser;
         }
 
-        binder.setBean(contact);
+        binder.setBean(user);
 
         setVisible(true);
     }
 
     private void delete() {
-        contactRepository.delete(contact);
+        userRepository.delete(user);
         changeHandler.onChange();
     }
 
     private void save() {
-        contactRepository.save(contact);
+        userRepository.save(user);
         changeHandler.onChange();
     }
 

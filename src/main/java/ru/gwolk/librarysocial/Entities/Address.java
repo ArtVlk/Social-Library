@@ -20,7 +20,7 @@ public class Address {
 
 
     @OneToMany(mappedBy = "address")
-    private Set<Contact> contacts = new HashSet<>();
+    private Set<User> users = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "country_id")
@@ -58,12 +58,12 @@ public class Address {
         this.houseNumber = houseNumber;
     }
 
-    public Set<Contact> getContacts() {
-        return contacts;
+    public Set<User> getUsers() {
+        return users;
     }
 
-    public void setContacts(Set<Contact> contacts) {
-        this.contacts = contacts;
+    public void setUsers(Set<User> users) {
+        this.users = users;
     }
 
     public Country getCountry() {

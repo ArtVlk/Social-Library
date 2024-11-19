@@ -25,7 +25,7 @@ public class Country {
 
     @OneToMany(mappedBy = "country")
     @JsonIgnore
-    private Set<Contact> contacts = new HashSet<>();
+    private Set<User> users = new HashSet<>();
 
     @OneToMany(mappedBy = "country")
     private Set<Address> addresses = new HashSet<>();
@@ -54,12 +54,12 @@ public class Country {
         this.code = code;
     }
 
-    public Set<Contact> getContacts() {
-        return contacts;
+    public Set<User> getUsers() {
+        return users;
     }
 
-    public void setContacts(Set<Contact> contacts) {
-        this.contacts = contacts;
+    public void setUsers(Set<User> users) {
+        this.users = users;
     }
 
     public Set<Address> getAddresses() {

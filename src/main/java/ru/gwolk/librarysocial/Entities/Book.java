@@ -2,6 +2,9 @@ package ru.gwolk.librarysocial.Entities;
 
 import jakarta.persistence.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "books")
 public class Book {
@@ -16,10 +19,24 @@ public class Book {
     @ManyToOne
     @JoinColumn(name = "author_id")
     private Author author;
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @ManyToMany(mappedBy = "books", cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    private Set<User> users = new HashSet<>();
 
+    @ManyToMany
+    @JoinTable(
+            name = "books_genres",
+            joinColumns = @JoinColumn(name = "book_id"),
+            inverseJoinColumns = @JoinColumn(name = "genre_id")
+    )
+    private Set<Genre> genres = new HashSet<>();
+
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<User> users) {
+        this.users = users;
+    }
 
     public Long getId() {
         return id;
@@ -61,11 +78,4 @@ public class Book {
         this.author = author;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
 }

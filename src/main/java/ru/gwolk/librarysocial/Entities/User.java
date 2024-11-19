@@ -1,30 +1,81 @@
 package ru.gwolk.librarysocial.Entities;
 
 import jakarta.persistence.*;
+
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "users")
 public class User {
+    public User(String name, String password, Role role) {
+        this.name = name;
+        this.password = password;
+        this.role = role;
+    }
+    public User() {};
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String username;
-    private String password;
     private String name;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<PhoneNumber> phoneNumbers = new HashSet<>();
+    @ManyToOne
+    @JoinColumn(name = "country_id")
+    private Country country;
+    private String gender;
+    @ManyToOne
+    @JoinColumn(name = "address_id")
+    private Address address;
+    private String password;
     private Role role;
-    @OneToMany(mappedBy = "user")
-    private Set<Book> books;
-    /*я не знаю, как ты будешь хранить избранных пользователей, но можно ведь так:
-    я пока тоже не знаю, мб каждый пользователь будет хранить избранное у себя в кэше
-     @ManyToMany
+    @ManyToMany
     @JoinTable(
-        name = "user_subscriptions",
-        joinColumns = @JoinColumn(name = "subscriber_id"),
-        inverseJoinColumns = @JoinColumn(name  = "subscribed_user_id")
+            name = "subcriptions",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "subscription_user_id")
     )
     private Set<User> subscriptions = new HashSet<>();
-     */
+    @ManyToMany
+    @JoinTable(
+            name = "user_books",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "book_id")
+    )
+    private Set<Book> books = new HashSet<>();
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Set<User> getSubscriptions() {
+        return subscriptions;
+    }
+
+    public void setSubscriptions(Set<User> subscriptions) {
+        this.subscriptions = subscriptions;
+    }
+
+    public Set<Book> getBooks() {
+        return books;
+    }
+
+    public void setBooks(Set<Book> books) {
+        this.books = books;
+    }
 
     public Long getId() {
         return id;
@@ -32,18 +83,6 @@ public class User {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     public String getName() {
@@ -54,19 +93,35 @@ public class User {
         this.name = name;
     }
 
-    public Role getRole() {
-        return role;
+    public Set<PhoneNumber> getPhoneNumbers() {
+        return phoneNumbers;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
+    public void setPhoneNumbers(Set<PhoneNumber> phoneNumbers) {
+        this.phoneNumbers = phoneNumbers;
     }
 
-    public Set<Book> getBooks() {
-        return books;
+    public Country getCountry() {
+        return country;
     }
 
-    public void setBooks(Set<Book> books) {
-        this.books = books;
+    public void setCountry(Country country) {
+        this.country = country;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
     }
 }
