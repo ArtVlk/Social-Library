@@ -11,8 +11,10 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
+import jakarta.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.gwolk.librarysocial.CRUDRepositories.UserRepository;
+import ru.gwolk.librarysocial.Entities.StringRoles;
 import ru.gwolk.librarysocial.Entities.User;
 
 @SpringComponent
@@ -56,6 +58,7 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
         setVisible(false);
     }
 
+    @RolesAllowed(StringRoles.ADMIN)
     public void editUser(User newUser) {
         if (newUser == null) {
             setVisible(true);

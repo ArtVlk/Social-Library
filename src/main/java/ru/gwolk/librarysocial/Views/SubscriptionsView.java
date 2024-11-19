@@ -5,15 +5,18 @@ import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.gwolk.librarysocial.CRUDRepositories.UserRepository;
 import ru.gwolk.librarysocial.Entities.User;
 import ru.gwolk.librarysocial.Entities.PhoneNumber;
+import ru.gwolk.librarysocial.Widgets.MainLayout;
 
 import java.util.stream.Collectors;
 
 @Route(value = "subscriptions", layout = MainLayout.class)
 @PageTitle("Подписки")
+@PermitAll
 public class SubscriptionsView extends VerticalLayout {
     private Grid<User> subscriptionsGrid;
     private UserRepository userRepository;
