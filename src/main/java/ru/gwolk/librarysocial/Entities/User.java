@@ -2,6 +2,7 @@ package ru.gwolk.librarysocial.Entities;
 
 import jakarta.persistence.*;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,6 +14,26 @@ public class User {
         this.password = password;
         this.role = role;
     }
+    public User(String name, String password, String country, String gender, String address) {
+        this.name = name;
+        this.password = password;
+
+        String[] countryAttributes = new String[3];
+        String[] countryAttrFromReg = country.split(" ");
+        for (int i = 0; i < countryAttrFromReg.length; i++)
+            countryAttributes[i] = countryAttrFromReg[i];
+
+        String[] addressAttributes = new String[3];
+        String[] addressAttrFromReg = address.split(" ");
+        for (int i = 0; i < addressAttrFromReg.length; i++) {
+            addressAttributes[i] = addressAttrFromReg[i];
+        }
+
+        this.country = new Country(countryAttributes[0], countryAttributes[1]);
+        this.gender = gender;
+        this.address = new Address(addressAttributes[0], addressAttributes[1], addressAttributes[2]);
+        this.role = Role.USER;
+    }
     public User() {};
 
     @Id
@@ -21,11 +42,11 @@ public class User {
     private String name;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<PhoneNumber> phoneNumbers = new HashSet<>();
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "country_id")
     private Country country;
     private String gender;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "address_id")
     private Address address;
     private String password;

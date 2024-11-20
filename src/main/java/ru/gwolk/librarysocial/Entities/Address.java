@@ -16,10 +16,16 @@ public class Address {
     @Column
     private String city;
     @Column
-    private Integer houseNumber;
+    private String houseNumber;
+    public Address(String city, String street, String houseNumber) {
+        this.city = city;
+        this.street = street;
+        this.houseNumber = houseNumber;
+    }
+    public Address() {}
 
 
-    @OneToMany(mappedBy = "address")
+    @OneToMany(mappedBy = "address", cascade = CascadeType.PERSIST)
     private Set<User> users = new HashSet<>();
 
     @ManyToOne
@@ -50,11 +56,11 @@ public class Address {
         this.city = city;
     }
 
-    public Integer getHouseNumber() {
+    public String getHouseNumber() {
         return houseNumber;
     }
 
-    public void setHouseNumber(Integer houseNumber) {
+    public void setHouseNumber(String houseNumber) {
         this.houseNumber = houseNumber;
     }
 

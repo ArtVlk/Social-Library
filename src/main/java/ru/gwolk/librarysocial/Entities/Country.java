@@ -23,7 +23,11 @@ public class Country {
 
     public Country() {}
 
-    @OneToMany(mappedBy = "country")
+    public Country(String name) {
+        this.name = name;
+    }
+
+    @OneToMany(mappedBy = "country", cascade = CascadeType.PERSIST)
     @JsonIgnore
     private Set<User> users = new HashSet<>();
 
