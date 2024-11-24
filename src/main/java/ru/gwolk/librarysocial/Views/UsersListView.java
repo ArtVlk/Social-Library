@@ -32,12 +32,9 @@ import java.util.stream.Collectors;
 public class UsersListView extends VerticalLayout {
     private final UserRepository userRepository;
     private final TextField filter = new TextField("", "Нажмите на фильтр");
-
-    private final Button addNewBtn = new Button("Добавить", VaadinIcon.PLUS.create());
     private final Button subscriptionsButton = new Button("Подписки", VaadinIcon.USER.create());
     private HorizontalLayout toolbar;
     private final UserEditor userEditor;
-
 
     private Grid<User> grid;
 
@@ -62,7 +59,6 @@ public class UsersListView extends VerticalLayout {
             userEditor.editUser(e.getValue());
         });
 
-        handleAddNewBtnClick(editor);
 
         subscriptionsButton.addClickListener(e -> {
             UI.getCurrent().navigate("subscriptions");
@@ -79,10 +75,6 @@ public class UsersListView extends VerticalLayout {
         grid.setItems((Collection<User>) userRepository.findAll());
     }
 
-
-    private void handleAddNewBtnClick(UserEditor editor) {
-        addNewBtn.addClickListener(e -> editor.editUser(new User()));
-    }
 
     private void showUser(String name) {
         if (name.isEmpty()) {
@@ -110,7 +102,7 @@ public class UsersListView extends VerticalLayout {
 
     private void setToolbar(HorizontalLayout toolbar, AuthenticationContext authenticationContext) {
         if (authenticationContext.hasRole(Role.ADMIN.toString())) {
-            toolbar.add(filter, addNewBtn, subscriptionsButton);
+            toolbar.add(filter, subscriptionsButton);
         }
         else if (authenticationContext.hasRole(Role.USER.toString()))
             toolbar.add(filter, subscriptionsButton);

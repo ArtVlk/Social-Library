@@ -51,13 +51,13 @@ public class User {
     private Address address;
     private String password;
     private Role role;
-    @ManyToMany
+    /*@ManyToMany
     @JoinTable(
             name = "subcriptions",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "subscription_user_id")
     )
-    private Set<User> subscriptions = new HashSet<>();
+    private Set<User> subscriptions = new HashSet<>();*/
     @ManyToMany
     @JoinTable(
             name = "user_books",
@@ -80,14 +80,6 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public Set<User> getSubscriptions() {
-        return subscriptions;
-    }
-
-    public void setSubscriptions(Set<User> subscriptions) {
-        this.subscriptions = subscriptions;
     }
 
     public Set<Book> getBooks() {

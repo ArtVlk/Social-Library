@@ -1,9 +1,7 @@
 package ru.gwolk.librarysocial.Widgets;
 
-import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.KeyNotifier;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -11,11 +9,12 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
-import jakarta.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
+import ru.gwolk.librarysocial.CRUDRepositories.SubscriptionsRepository;
 import ru.gwolk.librarysocial.CRUDRepositories.UserRepository;
-import ru.gwolk.librarysocial.Entities.StringRoles;
+import ru.gwolk.librarysocial.Entities.Subscription;
 import ru.gwolk.librarysocial.Entities.User;
+import ru.gwolk.librarysocial.Services.CurrentUserService;
 
 @SpringComponent
 @UIScope
@@ -23,12 +22,14 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
     private final UserRepository userRepository;
     private User user;
     private TextField name = new TextField("Имя");
-    private Button save = new Button("Сохранить", VaadinIcon.CHECK.create());
-    private Button cancel = new Button("Отмена");
-    private Button delete = new Button("Удалить", VaadinIcon.TRASH.create());
-    private HorizontalLayout actions = new HorizontalLayout(save, cancel, delete);
+    private Button subscribeButton = new Button("Подписаться", VaadinIcon.PLUS.create());
+    private TextField gender = new TextField("Пол");
+    private Button lookFavouritesButton = new Button("Посмотреть избранное", VaadinIcon.BOOK.create());
     private Binder<User> binder = new Binder<>(User.class);
     private ChangeHandler changeHandler;
+    private CurrentUserService currentUserService;
+    private SubscriptionsRepository subscriptionsRepository;
+
 
     public void setChangeHandler(ChangeHandler changeHandler) {
         this.changeHandler = changeHandler;
@@ -39,26 +40,33 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
     }
 
     @Autowired
-    public UserEditor(UserRepository userRepository) {
+    public UserEditor(UserRepository userRepository,SubscriptionsRepository subscriptionsRepository,
+                      CurrentUserService currentUserService) {
         this.userRepository = userRepository;
+        this.subscriptionsRepository = subscriptionsRepository;
+        this.currentUserService = currentUserService;
+        name.setReadOnly(true);
+        gender.setReadOnly(true);
 
-        add(name, actions);
+        setHorizontalComponentAlignment(Alignment.CENTER, name, gender, subscribeButton, lookFavouritesButton);
+
+        add(name, gender, subscribeButton, lookFavouritesButton);
+
         binder.bindInstanceFields(this);
 
         setSpacing(true);
 
-        save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        delete.addThemeVariants(ButtonVariant.LUMO_ERROR);
-
-        addKeyPressListener(Key.ENTER, e -> save());
-
-        save.addClickListener(e -> save());
-        delete.addClickListener(e -> delete());
-        cancel.addClickListener(e -> editUser(user));
+        subscribeButton.addClickListener(e -> subscribe());
         setVisible(false);
     }
 
-    @RolesAllowed(StringRoles.ADMIN)
+    private void subscribe() {
+        User iUser = currentUserService.getCurrentUser();
+        Subscription subscription = new Subscription(iUser, user);
+        subscriptionsRepository.save(subscription);
+        changeHandler.onChange();
+    }
+
     public void editUser(User newUser) {
         if (newUser == null) {
             setVisible(true);
@@ -73,18 +81,9 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
         }
 
         binder.setBean(user);
-
         setVisible(true);
     }
 
-    private void delete() {
-        userRepository.delete(user);
-        changeHandler.onChange();
-    }
 
-    private void save() {
-        userRepository.save(user);
-        changeHandler.onChange();
-    }
 
 }

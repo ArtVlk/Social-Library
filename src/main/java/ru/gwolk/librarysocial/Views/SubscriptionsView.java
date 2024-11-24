@@ -7,11 +7,15 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;
+import ru.gwolk.librarysocial.CRUDRepositories.SubscriptionsRepository;
 import ru.gwolk.librarysocial.CRUDRepositories.UserRepository;
+import ru.gwolk.librarysocial.Entities.Subscription;
 import ru.gwolk.librarysocial.Entities.User;
 import ru.gwolk.librarysocial.Entities.PhoneNumber;
+import ru.gwolk.librarysocial.Services.CurrentUserService;
 import ru.gwolk.librarysocial.Widgets.MainLayout;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Route(value = "subscriptions", layout = MainLayout.class)
@@ -21,9 +25,14 @@ public class SubscriptionsView extends VerticalLayout {
     private Grid<User> subscriptionsGrid;
     private UserRepository userRepository;
     private H1 subscriptionsTitle;
+    private CurrentUserService currentUserService;
+    private SubscriptionsRepository subscriptionsRepository;
     @Autowired
-    public SubscriptionsView(UserRepository userRepository) {
+    public SubscriptionsView(UserRepository userRepository, SubscriptionsRepository subscriptionsRepository,
+                             CurrentUserService currentUserService) {
         this.userRepository = userRepository;
+        this.subscriptionsRepository = subscriptionsRepository;
+        this.currentUserService = currentUserService;
         this.subscriptionsGrid = new Grid<>(User.class);
         this.subscriptionsTitle = new H1("Ваши подписки");
 
@@ -39,7 +48,14 @@ public class SubscriptionsView extends VerticalLayout {
 
         add(subscriptionsTitle, subscriptionsGrid);
 
-        subscriptionsGrid.setItems(userRepository.findByGender("M"));
+        List<Subscription> subscriptions = subscriptionsRepository
+                .findSubscriptionsByUser(currentUserService.getCurrentUser());
+
+        List<User> subscribedUsers = subscriptions.stream()
+                .map(Subscription::getSubscribedUser)
+                .toList();
+
+        subscriptionsGrid.setItems(subscribedUsers);
 
     }
 }
