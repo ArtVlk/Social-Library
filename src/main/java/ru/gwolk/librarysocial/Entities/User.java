@@ -58,7 +58,7 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "subscription_user_id")
     )
     private Set<User> subscriptions = new HashSet<>();*/
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_books",
             joinColumns = @JoinColumn(name = "user_id"),
