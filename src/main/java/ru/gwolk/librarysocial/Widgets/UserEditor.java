@@ -32,11 +32,13 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
     private TextField name = new TextField("Имя");
     private Button subscribeButton = new Button("Подписаться", VaadinIcon.PLUS.create());
     private TextField gender = new TextField("Пол");
-    private Button lookFavouritesButton = new Button("Посмотреть избранное", VaadinIcon.BOOK.create());
+    public Button lookFavouritesButton = new Button("Посмотреть избранное", VaadinIcon.BOOK.create());
     private Binder<User> binder = new Binder<>(User.class);
     private ChangeHandler changeHandler;
     private CurrentUserService currentUserService;
     private SubscriptionsRepository subscriptionsRepository;
+    private Notification notificationWarning;
+    private Notification notificationOk;
 
 
     public void setChangeHandler(ChangeHandler changeHandler) {
@@ -62,6 +64,10 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
 
         binder.bindInstanceFields(this);
 
+        notificationWarning = new Notification();
+
+        notificationOk = new Notification();
+
         setSpacing(true);
 
         subscribeButton.addClickListener(e -> subscribe());
@@ -69,21 +75,23 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
     }
 
     private void subscribe() {
-        User myUser = currentUserService.getCurrentUser();
+        User me = currentUserService.getCurrentUser();
+        Subscription findingSubscription = subscriptionsRepository.findSubscriptionByUserAndSubscribedUser(me, user);
 
-        List<Subscription> subscriptionList = subscriptionsRepository.findSubscriptionsByUser(myUser);
-        if (subscriptionList.isEmpty()) {
-            Subscription subscription = new Subscription(myUser, user);
+        if (findingSubscription == null) {
+            Subscription subscription = new Subscription(me, user);
             subscriptionsRepository.save(subscription);
+            notificationOk = Notification.show("✓");
+            notificationOk.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
             changeHandler.onChange();
         }
         else {
-            Notification notification = Notification.show("Вы уже подписаны на этого пользователя");
-            notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+            notificationWarning = Notification.show("Вы уже подписаны на этого пользователя");
+            notificationWarning.addThemeVariants(NotificationVariant.LUMO_WARNING);
         }
     }
 
-    @RolesAllowed(StringRoles.ADMIN)
+
     public void editUser(User newUser) {
         if (newUser == null) {
             setVisible(true);

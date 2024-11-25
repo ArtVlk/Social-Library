@@ -47,7 +47,7 @@ public class UsersListView extends VerticalLayout {
 
         setUsersGrid(grid);
 
-        setToolbar(toolbar, authenticationContext);
+        toolbar.add(filter, subscriptionsButton);
 
         add(toolbar, grid, userEditor);
 
@@ -64,12 +64,9 @@ public class UsersListView extends VerticalLayout {
             UI.getCurrent().navigate("subscriptions");
         });
 
-        editor.setChangeHandler(new UserEditor.ChangeHandler() {
-            @Override
-            public void onChange() {
-                editor.setVisible(false);
-                UsersListView.this.showUser(filter.getValue());
-            }
+        editor.setChangeHandler(() -> {
+            editor.setVisible(false);
+            UsersListView.this.showUser(filter.getValue());
         });
 
         grid.setItems((Collection<User>) userRepository.findAll());
@@ -98,13 +95,5 @@ public class UsersListView extends VerticalLayout {
 
         grid.getElement().getStyle().set("margin-left", "auto");
         grid.getElement().getStyle().set("margin-right", "auto");
-    }
-
-    private void setToolbar(HorizontalLayout toolbar, AuthenticationContext authenticationContext) {
-        if (authenticationContext.hasRole(Role.ADMIN.toString())) {
-            toolbar.add(filter, subscriptionsButton);
-        }
-        else if (authenticationContext.hasRole(Role.USER.toString()))
-            toolbar.add(filter, subscriptionsButton);
     }
 }

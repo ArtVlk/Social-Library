@@ -16,6 +16,7 @@ import ru.gwolk.librarysocial.Services.CurrentUserService;
 import ru.gwolk.librarysocial.Widgets.MainLayout;
 import ru.gwolk.librarysocial.Widgets.SubscriptionUserEditor;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,11 +29,13 @@ public class SubscriptionsView extends VerticalLayout {
     private H1 subscriptionsTitle;
     private CurrentUserService currentUserService;
     private SubscriptionsRepository subscriptionsRepository;
+    private SubscriptionUserEditor subscriptionEditor;
     @Autowired
     public SubscriptionsView(UserRepository userRepository, SubscriptionsRepository subscriptionsRepository,
-                             CurrentUserService currentUserService) {
+                             CurrentUserService currentUserService, SubscriptionUserEditor subscriptionEditor) {
         this.userRepository = userRepository;
         this.subscriptionsRepository = subscriptionsRepository;
+        this.subscriptionEditor = subscriptionEditor;
         this.currentUserService = currentUserService;
         this.subscriptionsGrid = new Grid<>(User.class);
         this.subscriptionsTitle = new H1("Ваши подписки");
@@ -41,8 +44,10 @@ public class SubscriptionsView extends VerticalLayout {
 
         setHorizontalComponentAlignment(Alignment.CENTER, subscriptionsTitle, subscriptionsGrid);
 
-        //subscriptionsGrid.asSingleSelect().addValueChangeListener(e -> SubscriptionUserEditor.editSubscription(e.getValue()));
-        add(subscriptionsTitle, subscriptionsGrid);
+        subscriptionsGrid.asSingleSelect().addValueChangeListener(e ->
+                subscriptionEditor.editSubscription(e.getValue()));
+
+        add(subscriptionsTitle, subscriptionsGrid, subscriptionEditor);
 
         List<Subscription> subscriptions = subscriptionsRepository
                 .findSubscriptionsByUser(currentUserService.getCurrentUser());
@@ -51,8 +56,17 @@ public class SubscriptionsView extends VerticalLayout {
                 .map(Subscription::getSubscribedUser)
                 .toList();
 
+        subscriptionEditor.setChangeHandler(() -> {
+            subscriptionEditor.setVisible(false);
+            updateSubscribedUsersList();
+        });
+
         subscriptionsGrid.setItems(subscribedUsers);
 
+    }
+
+    private void updateSubscribedUsersList() {
+        subscriptionsGrid.setItems(subscriptionsRepository.findAllSubscribedUsers());
     }
 
     private void setSubsciptionsGrid(Grid<User> subscriptionsGrid) {

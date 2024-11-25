@@ -1,5 +1,6 @@
 node_modules
 HELP.md
+application.properties
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/

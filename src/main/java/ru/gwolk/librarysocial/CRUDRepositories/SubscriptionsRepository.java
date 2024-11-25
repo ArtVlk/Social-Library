@@ -12,4 +12,9 @@ import java.util.List;
 public interface SubscriptionsRepository extends CrudRepository<Subscription, Long> {
     @Query("SELECT s FROM Subscription s WHERE s.user = :user")
     List<Subscription> findSubscriptionsByUser(User user);
+
+    @Query("SELECT s.subscribedUser FROM Subscription s")
+    List<User> findAllSubscribedUsers();
+
+    Subscription findSubscriptionByUserAndSubscribedUser(User user, User subscribedUser);
 }
