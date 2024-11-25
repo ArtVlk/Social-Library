@@ -23,6 +23,7 @@ public class Subscription {
         this.user = user;
         this.subscribedUser = subscribedUser;
     }
+    public Subscription() {}
 
     public Long getId() {
         return id;

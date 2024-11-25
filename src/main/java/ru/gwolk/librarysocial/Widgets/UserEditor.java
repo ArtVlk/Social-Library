@@ -1,20 +1,28 @@
 package ru.gwolk.librarysocial.Widgets;
 
 import com.vaadin.flow.component.KeyNotifier;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
+import jakarta.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.gwolk.librarysocial.CRUDRepositories.SubscriptionsRepository;
 import ru.gwolk.librarysocial.CRUDRepositories.UserRepository;
+import ru.gwolk.librarysocial.Entities.StringRoles;
 import ru.gwolk.librarysocial.Entities.Subscription;
 import ru.gwolk.librarysocial.Entities.User;
 import ru.gwolk.librarysocial.Services.CurrentUserService;
+import ru.gwolk.librarysocial.Utilities.RoleUtils;
+
+import java.util.List;
 
 @SpringComponent
 @UIScope
@@ -61,12 +69,21 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
     }
 
     private void subscribe() {
-        User iUser = currentUserService.getCurrentUser();
-        Subscription subscription = new Subscription(iUser, user);
-        subscriptionsRepository.save(subscription);
-        changeHandler.onChange();
+        User myUser = currentUserService.getCurrentUser();
+
+        List<Subscription> subscriptionList = subscriptionsRepository.findSubscriptionsByUser(myUser);
+        if (subscriptionList.isEmpty()) {
+            Subscription subscription = new Subscription(myUser, user);
+            subscriptionsRepository.save(subscription);
+            changeHandler.onChange();
+        }
+        else {
+            Notification notification = Notification.show("Вы уже подписаны на этого пользователя");
+            notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+        }
     }
 
+    @RolesAllowed(StringRoles.ADMIN)
     public void editUser(User newUser) {
         if (newUser == null) {
             setVisible(true);

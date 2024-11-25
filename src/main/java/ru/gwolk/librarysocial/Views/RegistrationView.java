@@ -20,7 +20,7 @@ public class RegistrationView extends VerticalLayout {
     public RegistrationView(MyUserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
         RegistrationForm registrationForm = new RegistrationForm();
-        // Center the RegistrationForm
+
         setHorizontalComponentAlignment(Alignment.CENTER, registrationForm);
 
         add(registrationForm);

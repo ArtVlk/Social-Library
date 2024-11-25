@@ -14,6 +14,7 @@ import ru.gwolk.librarysocial.Entities.User;
 import ru.gwolk.librarysocial.Entities.PhoneNumber;
 import ru.gwolk.librarysocial.Services.CurrentUserService;
 import ru.gwolk.librarysocial.Widgets.MainLayout;
+import ru.gwolk.librarysocial.Widgets.SubscriptionUserEditor;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,16 +37,11 @@ public class SubscriptionsView extends VerticalLayout {
         this.subscriptionsGrid = new Grid<>(User.class);
         this.subscriptionsTitle = new H1("Ваши подписки");
 
-        subscriptionsGrid.setHeight("300px");
-        subscriptionsGrid.setWidth("900px");
-        subscriptionsGrid.setColumns();
+        setSubsciptionsGrid(subscriptionsGrid);
 
-        subscriptionsGrid.addColumn(User::getName).setHeader("Имя").setWidth("540px");
-        subscriptionsGrid.addColumn(User::getGender).setHeader("Пол").setWidth("90px");
-        subscriptionsGrid.addColumn(user -> user.getPhoneNumbers().stream()
-                .map(PhoneNumber::getNumber)
-                .collect(Collectors.joining(", "))).setHeader("Номера телефонов").setWidth("270px");
+        setHorizontalComponentAlignment(Alignment.CENTER, subscriptionsTitle, subscriptionsGrid);
 
+        //subscriptionsGrid.asSingleSelect().addValueChangeListener(e -> SubscriptionUserEditor.editSubscription(e.getValue()));
         add(subscriptionsTitle, subscriptionsGrid);
 
         List<Subscription> subscriptions = subscriptionsRepository
@@ -57,5 +53,17 @@ public class SubscriptionsView extends VerticalLayout {
 
         subscriptionsGrid.setItems(subscribedUsers);
 
+    }
+
+    private void setSubsciptionsGrid(Grid<User> subscriptionsGrid) {
+        subscriptionsGrid.setHeight("300px");
+        subscriptionsGrid.setWidth("900px");
+        subscriptionsGrid.setColumns();
+
+        subscriptionsGrid.addColumn(User::getName).setHeader("Имя").setWidth("540px");
+        subscriptionsGrid.addColumn(User::getGender).setHeader("Пол").setWidth("90px");
+        subscriptionsGrid.addColumn(user -> user.getPhoneNumbers().stream()
+                .map(PhoneNumber::getNumber)
+                .collect(Collectors.joining(", "))).setHeader("Номера телефонов").setWidth("270px");
     }
 }
