@@ -12,7 +12,10 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
+    private String description;
     private Integer stars;
+    private Integer sumStars;
+    private Integer estimationCount;
     @ManyToOne
     @JoinColumn(name = "genre_id")
     private Genre genre;
@@ -78,4 +81,27 @@ public class Book {
         this.author = author;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Integer getSumStars() {
+        return sumStars;
+    }
+
+    public void setSumStars(Integer sumStars) {
+        this.sumStars = sumStars;
+    }
+
+    public Integer getEstimationCount() {
+        return estimationCount;
+    }
+
+    public void setEstimationCount(Integer estimationCount) {
+        this.estimationCount = estimationCount;
+    }
 }

@@ -84,6 +84,4 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
         setVisible(true);
     }
 
-
-
 }
