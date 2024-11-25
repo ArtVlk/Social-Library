@@ -19,6 +19,16 @@ public class UserBook {
 
     private Integer userRating;
 
+    public UserBook (User user, Book book, Integer userRating) {
+        this.user = user;
+        this.book = book;
+        this.userRating = userRating;
+    }
+
+    public UserBook() {
+
+    }
+
     public Integer getUserRating() {
         return userRating;
     }

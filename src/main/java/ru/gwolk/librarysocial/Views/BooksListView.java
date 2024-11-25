@@ -9,16 +9,11 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.spring.security.AuthenticationContext;
 import jakarta.annotation.security.PermitAll;
-import jakarta.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import ru.gwolk.librarysocial.CRUDRepositories.BookRepository;
 import ru.gwolk.librarysocial.Entities.Book;
 import ru.gwolk.librarysocial.Entities.Role;
-import ru.gwolk.librarysocial.Entities.StringRoles;
 import ru.gwolk.librarysocial.Entities.User;
 import ru.gwolk.librarysocial.Services.CurrentUserService;
 import ru.gwolk.librarysocial.Widgets.BookDetail;
@@ -35,32 +30,34 @@ public class BooksListView extends VerticalLayout {
     private final CurrentUserService currentUserService;
     private final TextField filter = new TextField("", "Нажмите на фильтр");
     private final Grid<Book> grid;
-    private final BookDetail bookEditor;
+    private final BookDetail bookDetail;
     private final Button addBookButton = new Button("Добавить книгу");
     private final BookForm bookForm;
 
     @Autowired
     public BooksListView(BookRepository bookRepository, CurrentUserService currentUserService, BookDetail bookEditor, BookForm bookForm){
         this.bookRepository = bookRepository;
-        this.bookEditor = bookEditor;
+        this.bookDetail = bookEditor;
         this.bookForm = bookForm;
         this.currentUserService = currentUserService;
 
         grid = new Grid<>(Book.class);
 
         setBooksGrid(grid);
-        add(new HorizontalLayout(filter), grid, addBookButton, bookEditor);
+        add(new HorizontalLayout(filter), grid, addBookButton, bookEditor, bookForm);
 
         filter.setValueChangeMode(ValueChangeMode.EAGER);
         filter.addValueChangeListener(e -> showBook(e.getValue()));
 
         bookEditor.setVisible(false);
+        bookForm.setVisible(false);
 
         showAddBookButton();
 
         grid.asSingleSelect().addValueChangeListener(event -> {
             if (event.getValue() != null) {
                 bookEditor.editBook(event.getValue());
+                bookForm.setVisible(false);
                 bookEditor.setVisible(true);
             } else {
                 bookEditor.setVisible(false);
@@ -84,6 +81,7 @@ public class BooksListView extends VerticalLayout {
 
     private void openBookForm() {
         bookForm.setVisible(true);
+        bookDetail.setVisible(false);
     }
 
     private void showBook(String name) {

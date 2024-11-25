@@ -16,9 +16,6 @@ import ru.gwolk.librarysocial.Entities.Author;
 import ru.gwolk.librarysocial.Entities.Book;
 import ru.gwolk.librarysocial.Entities.Genre;
 
-import java.util.HashSet;
-import java.util.Set;
-
 @SpringComponent
 @UIScope
 public class BookForm extends VerticalLayout {
@@ -46,37 +43,22 @@ public class BookForm extends VerticalLayout {
         saveButton.addClickListener(e -> saveBook());
     }
 
+    public void clearForm() {
+        nameField.clear();
+        authorField.clear();
+        genreField.clear();
+        descriptionField.clear();
+        ratingField.clear();
+    }
+
     public void saveBook() {
         if (isValid()) {
-            // Получаем или создаем нового автора
-            Author author = authorRepository.findByName(authorField.getValue())
-                    .orElseGet(() -> {
-                        Author newAuthor = new Author();
-                        newAuthor.setName(authorField.getValue());
-                        return authorRepository.save(newAuthor);
-                    });
-
-            // Получаем или создаем новый жанр
-            Genre genre = genreRepository.findByName(genreField.getValue())
-                    .orElseGet(() -> {
-                        Genre newGenre = new Genre();
-                        newGenre.setName(genreField.getValue());
-                        return genreRepository.save(newGenre);
-                    });
-
-            // Создаем книгу
-            Book book = new Book();
-            book.setName(nameField.getValue());
-            book.setAuthor(author);
-
-            Set<Genre> genres = new HashSet<>();
-            genres.add(genre);  // Добавляем жанр в Set
-            book.setGenre((Genre) genres);
-
-            book.setDescription(descriptionField.getValue());
-            book.setStars(ratingField.getValue().intValue());
+            Author author = getOrCreateAuthor(authorField.getValue());
+            Genre genre = getOrCreateGenre(genreField.getValue());
+            Book book = createBook(nameField.getValue(), author, genre, descriptionField.getValue(), ratingField.getValue().intValue());
 
             bookRepository.save(book);
+
             clearForm();
             Notification.show("Книга добавлена!");
         } else {
@@ -84,19 +66,37 @@ public class BookForm extends VerticalLayout {
         }
     }
 
+    private Author getOrCreateAuthor(String authorName) {
+        return authorRepository.findByName(authorName)
+                .orElseGet(() -> {
+                    Author newAuthor = new Author(authorName);
+                    return authorRepository.save(newAuthor);
+                });
+    }
+
+    private Genre getOrCreateGenre(String genreName) {
+        return genreRepository.findByName(genreName)
+                .orElseGet(() -> {
+                    Genre newGenre = new Genre(genreName);
+                    return genreRepository.save(newGenre);
+                });
+    }
+
+    private Book createBook(String name, Author author, Genre genre, String description, Integer stars) {
+        Book book = new Book();
+        book.setName(name);
+        book.setAuthor(author);
+        book.setGenre(genre);
+        book.setDescription(description);
+        book.setStars(stars);
+        return book;
+    }
+
+
     private boolean isValid() {
         return !nameField.getValue().isEmpty() && !authorField.getValue().isEmpty() &&
                 !genreField.getValue().isEmpty() && !descriptionField.getValue().isEmpty() &&
                 ratingField.getValue() != null;
-    }
-
-    private void clearForm() {
-        nameField.clear();
-        authorField.clear();
-        genreField.clear();
-        descriptionField.clear();
-        ratingField.clear();
-        setVisible(false);
     }
 
 }

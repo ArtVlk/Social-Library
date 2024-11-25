@@ -45,6 +45,13 @@ public class BookDetail extends VerticalLayout {
         this.currentUserService = currentUserService;
         this.userRepository = userRepository;
 
+        descriptionField.setWidth("80%");
+        descriptionField.setHeight("200px");
+
+        authorField.setWidth("80%");
+        ratingField.setWidth("80%");
+        newRatingField.setWidth("80%");
+
 
         setHorizontalComponentAlignment(Alignment.CENTER, authorField, descriptionField, addToLibraryButton, ratingField,
                 newRatingField, saveRatingButton, editBookButton);
@@ -65,11 +72,7 @@ public class BookDetail extends VerticalLayout {
 
     private void configureEditButtonVisibility() {
         User currentUser = currentUserService.getCurrentUser();
-        if (currentUser != null && currentUser.getRole() == Role.ADMIN) {
-            editBookButton.setVisible(true);
-        } else {
-            editBookButton.setVisible(false);
-        }
+        editBookButton.setVisible(currentUser != null && currentUser.getRole() == Role.ADMIN);
     }
 
     private void addToLibrary() {
@@ -188,10 +191,7 @@ public class BookDetail extends VerticalLayout {
     }
 
     private void addNewRating(User currentUser, int newStars) {
-        UserBook userBook = new UserBook();
-        userBook.setUser(currentUser);
-        userBook.setBook(currentBook);
-        userBook.setUserRating(newStars);
+        UserBook userBook = new UserBook(currentUser, currentBook, newStars);
         currentBook.setSumStars(currentBook.getSumStars() + newStars);
         currentBook.setEstimationCount(currentBook.getEstimationCount() + 1);
         userBookRepository.save(userBook);

@@ -16,29 +16,31 @@ public class Book {
     private Integer stars;
     private Integer sumStars;
     private Integer estimationCount;
+
     @ManyToOne
     @JoinColumn(name = "genre_id")
     private Genre genre;
+
     @ManyToOne
     @JoinColumn(name = "author_id")
     private Author author;
-    @ManyToMany(mappedBy = "books", cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-    private Set<User> users = new HashSet<>();
 
-    @ManyToMany
-    @JoinTable(
-            name = "books_genres",
-            joinColumns = @JoinColumn(name = "book_id"),
-            inverseJoinColumns = @JoinColumn(name = "genre_id")
-    )
-    private Set<Genre> genres = new HashSet<>();
-
-    public Set<User> getUsers() {
-        return users;
+    public Book(String name, Author author, Genre genre, String description, int stars) {
+        this.name = name;
+        this.author = author;
+        this.genre = genre;
+        this.description = description;
+        this.stars = stars;
     }
 
-    public void setUsers(Set<User> users) {
-        this.users = users;
+    public Book() {}
+
+    public Genre getGenre() {
+        return genre;
+    }
+
+    public void setGenre(Genre genre) {
+        this.genre = genre;
     }
 
     public Long getId() {
@@ -57,6 +59,14 @@ public class Book {
         this.name = name;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public Integer getStars() {
         return stars;
     }
@@ -65,28 +75,12 @@ public class Book {
         this.stars = stars;
     }
 
-    public Genre getGenre() {
-        return genre;
-    }
-
-    public void setGenre(Genre genre) {
-        this.genre = genre;
-    }
-
     public Author getAuthor() {
         return author;
     }
 
     public void setAuthor(Author author) {
         this.author = author;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public Integer getSumStars() {

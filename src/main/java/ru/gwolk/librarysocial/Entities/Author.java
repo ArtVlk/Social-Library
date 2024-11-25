@@ -3,6 +3,7 @@ package ru.gwolk.librarysocial.Entities;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -14,6 +15,19 @@ public class Author {
     private String name;
     @OneToMany(mappedBy = "author")
     private Set<Book> books = new HashSet<>();
+
+    public Author(String name, Book book) {
+        this.name = name;
+        books.add(book);
+    }
+
+    public Author(String name) {
+        this.name = name;
+    }
+
+    public Author() {
+
+    }
 
     public Set<Book> getBooks() {
         return books;

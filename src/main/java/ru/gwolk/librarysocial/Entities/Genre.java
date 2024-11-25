@@ -3,6 +3,7 @@ package ru.gwolk.librarysocial.Entities;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -12,8 +13,22 @@ public class Genre {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
-    @ManyToMany(mappedBy = "genres", cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @OneToMany(mappedBy = "genre")
     private Set<Book> books = new HashSet<>();
+
+    public Genre(String name, Book book) {
+        this.name = name;
+        books.add(book);
+    }
+
+
+    public Genre(String name) {
+        this.name = name;
+    }
+
+    public Genre() {
+
+    }
 
     public Set<Book> getBooks() {
         return books;
