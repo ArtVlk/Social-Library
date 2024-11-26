@@ -2,6 +2,7 @@ package ru.gwolk.librarysocial.Widgets;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextArea;
@@ -29,6 +30,7 @@ public class BookForm extends VerticalLayout {
     private TextArea descriptionField = new TextArea("Описание");
     private NumberField ratingField = new NumberField("Оценка");
     private Button saveButton = new Button("Сохранить");
+    private Button cancelButton = new Button("Отмена");
 
     @Autowired
     public BookForm(BookRepository bookRepository, AuthorRepository authorRepository, GenreRepository genreRepository) {
@@ -38,9 +40,14 @@ public class BookForm extends VerticalLayout {
 
         setVisible(false);
         setSizeUndefined();
-        add(nameField, authorField, genreField, descriptionField, ratingField, saveButton);
+        add(nameField, authorField, genreField, descriptionField, ratingField, new HorizontalLayout(saveButton, cancelButton));
 
         saveButton.addClickListener(e -> saveBook());
+        cancelButton.addClickListener(e -> cancelForming());
+    }
+
+    private void cancelForming() {
+        setVisible(false);
     }
 
     public void clearForm() {

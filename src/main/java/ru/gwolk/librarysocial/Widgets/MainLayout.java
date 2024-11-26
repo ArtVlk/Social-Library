@@ -16,6 +16,7 @@ import com.vaadin.flow.spring.security.AuthenticationContext;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import ru.gwolk.librarysocial.Views.BooksListView;
 import ru.gwolk.librarysocial.Views.SubscriptionsView;
+import ru.gwolk.librarysocial.Views.UserBooksListView;
 import ru.gwolk.librarysocial.Views.UsersListView;
 
 public class MainLayout extends AppLayout {
@@ -66,6 +67,8 @@ public class MainLayout extends AppLayout {
                 VaadinIcon.THUMBS_UP.create()));
         nav.addItem(new SideNavItem("Книги", BooksListView.class,
                 VaadinIcon.BOOK.create()));
+        nav.addItem(new SideNavItem("Мои книги", UserBooksListView.class,
+                VaadinIcon.SHIELD.create()));
 
         return nav;
     }

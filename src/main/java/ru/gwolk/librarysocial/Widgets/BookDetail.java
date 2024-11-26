@@ -2,6 +2,7 @@ package ru.gwolk.librarysocial.Widgets;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextArea;
@@ -28,6 +29,7 @@ public class BookDetail extends VerticalLayout {
     private final CurrentUserService currentUserService;
     private final UserRepository userRepository;
     private Book currentBook;
+    private Button cancelButton = new Button("Отмена");
 
     private final TextField authorField = new TextField("Автор и название");
     private final TextArea descriptionField = new TextArea("Описание");
@@ -35,7 +37,6 @@ public class BookDetail extends VerticalLayout {
     private Button saveRatingButton = new Button("Сохранить оценку");
     private final NumberField newRatingField = new NumberField("Поставить оценку");
     private Button addToLibraryButton = new Button("Добавить в библиотеку");
-    private final Button editBookButton = new Button("Редактировать");
 
     @Autowired
     public BookDetail(BookRepository bookRepository, UserBookRepository userBookRepository,
@@ -49,30 +50,26 @@ public class BookDetail extends VerticalLayout {
         descriptionField.setHeight("200px");
 
         authorField.setWidth("80%");
-        ratingField.setWidth("80%");
-        newRatingField.setWidth("80%");
 
+        HorizontalLayout actionsLayout = new HorizontalLayout(saveRatingButton, cancelButton);
 
         setHorizontalComponentAlignment(Alignment.CENTER, authorField, descriptionField, addToLibraryButton, ratingField,
-                newRatingField, saveRatingButton, editBookButton);
-        add(authorField, descriptionField, addToLibraryButton, ratingField, newRatingField, saveRatingButton, editBookButton);
+                newRatingField, actionsLayout);
+        add(authorField, descriptionField, addToLibraryButton, ratingField, newRatingField, actionsLayout);
 
         authorField.setReadOnly(true);
         descriptionField.setReadOnly(true);
         ratingField.setReadOnly(true);
 
-        editBookButton.addClickListener(e -> editCurrentBook());
         addToLibraryButton.addClickListener(e -> addToLibrary());
         saveRatingButton.addClickListener(e -> saveRating());
+        cancelButton.addClickListener(e -> cancelWatching());
 
-
-        configureEditButtonVisibility();
         setVisible(false);
     }
 
-    private void configureEditButtonVisibility() {
-        User currentUser = currentUserService.getCurrentUser();
-        editBookButton.setVisible(currentUser != null && currentUser.getRole() == Role.ADMIN);
+    private void cancelWatching() {
+        setVisible(false);
     }
 
     private void addToLibrary() {
@@ -125,8 +122,6 @@ public class BookDetail extends VerticalLayout {
         authorField.setValue(book.getAuthor().getName() + ": " + book.getName());
         descriptionField.setValue(book.getDescription() != null ? book.getDescription() : "Описание отсутствует.");
         ratingField.setValue(book.getStars() != null ? String.valueOf(book.getStars()) : "Нет рейтинга");
-
-        configureEditButtonVisibility();
     }
 
     private void saveRating() {

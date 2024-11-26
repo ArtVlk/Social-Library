@@ -6,9 +6,11 @@ import ru.gwolk.librarysocial.Entities.Book;
 import ru.gwolk.librarysocial.Entities.User;
 import ru.gwolk.librarysocial.Entities.UserBook;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface UserBookRepository extends CrudRepository<UserBook, Long> {
     Optional<UserBook> findByUserAndBook(User user, Book book);
+    List<UserBook> findByUser(User user);
 }
