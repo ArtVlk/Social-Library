@@ -13,6 +13,10 @@ public class PhoneNumber {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+    public PhoneNumber(String number) {
+        this.number = number;
+    }
+    public PhoneNumber() {}
 
     public Long getId() {
         return id;

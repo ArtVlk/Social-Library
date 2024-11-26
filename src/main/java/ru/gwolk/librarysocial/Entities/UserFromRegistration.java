@@ -8,8 +8,17 @@ public class UserFromRegistration {
     @NotBlank
     private String password;
     private String country;
+    private String phoneNumber;
     private String gender;
     private String address;
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
 
     public String getName() {
         return name;

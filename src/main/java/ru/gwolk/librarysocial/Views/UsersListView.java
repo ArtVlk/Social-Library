@@ -83,7 +83,7 @@ public class UsersListView extends VerticalLayout {
     }
 
     private void setUsersGrid(Grid<User> grid) {
-        grid.setHeight("300px");
+        grid.setHeight("400px");
         grid.setWidth("900px");
         grid.setColumns();
 
@@ -91,7 +91,7 @@ public class UsersListView extends VerticalLayout {
         grid.addColumn(User::getGender).setHeader("Пол").setWidth("90px");
         grid.addColumn(user -> user.getPhoneNumbers().stream()
                 .map(PhoneNumber::getNumber)
-                .collect(Collectors.joining(", "))).setHeader("Номера телефонов").setWidth("270px");
+                .collect(Collectors.joining(", "))).setHeader("Номер телефона").setWidth("270px");
 
         grid.getElement().getStyle().set("margin-left", "auto");
         grid.getElement().getStyle().set("margin-right", "auto");

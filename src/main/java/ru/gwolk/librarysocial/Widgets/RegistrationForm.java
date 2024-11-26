@@ -13,13 +13,13 @@ import jakarta.validation.constraints.NotBlank;
 import java.util.stream.Stream;
 
 public class RegistrationForm extends FormLayout {
-    private H3 title;
 
     @NotBlank
     private TextField name;
 
     private PasswordField password;
     private PasswordField passwordConfirm;
+    private TextField phoneNumber;
     private TextField gender;
     private TextField country;
     private TextField address;
@@ -30,22 +30,25 @@ public class RegistrationForm extends FormLayout {
 
 
     public RegistrationForm() {
-        title = new H3("Регистрация");
-        name = new TextField("Ник");
+        name = new TextField("Имя");
         password = new PasswordField("Пароль");
         passwordConfirm = new PasswordField("Повторный ввод пароля");
-        gender = new TextField("Пол");
-        country = new TextField("Страна");
-        address = new TextField("Адрес");
+        phoneNumber = new TextField("Номер телефона");
+        gender = new TextField("Пол (M или W)");
+        country = new TextField("Страна (Название, код)");
+        address = new TextField("Адрес (Город, улица, номер дома)");
 
-        setRequiredIndicatorVisible(name,  password, passwordConfirm);
+
+        setRequiredIndicatorVisible(name,  password, passwordConfirm, phoneNumber);
 
         errorMessageField = new Span();
 
         submitButton = new Button("Регистрация");
         submitButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
-        add(title, name, password, passwordConfirm, gender, country, address, errorMessageField, submitButton);
+        phoneNumber.setPlaceholder("+7");
+
+        add(name, password, passwordConfirm, phoneNumber, gender, country, address, errorMessageField, submitButton);
 
         // Max width of the Form
         setMaxWidth("500px");

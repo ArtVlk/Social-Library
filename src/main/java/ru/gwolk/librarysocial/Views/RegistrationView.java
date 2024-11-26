@@ -1,5 +1,6 @@
 package ru.gwolk.librarysocial.Views;
 
+import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -16,14 +17,16 @@ import ru.gwolk.librarysocial.Widgets.RegistrationFormBinder;
 @AnonymousAllowed
 public class RegistrationView extends VerticalLayout {
     private final MyUserDetailsService userDetailsService;
+    private H1 registrationTitle;
     @Autowired
     public RegistrationView(MyUserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
+        registrationTitle = new H1("Регистрация");
         RegistrationForm registrationForm = new RegistrationForm();
 
-        setHorizontalComponentAlignment(Alignment.CENTER, registrationForm);
+        setHorizontalComponentAlignment(Alignment.CENTER, registrationTitle, registrationForm);
 
-        add(registrationForm);
+        add(registrationTitle, registrationForm);
 
         RegistrationFormBinder registrationFormBinder = new RegistrationFormBinder(registrationForm, userDetailsService);
         registrationFormBinder.addBindingAndValidation();
