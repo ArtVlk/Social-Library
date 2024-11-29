@@ -1,4 +1,4 @@
-package ru.gwolk.librarysocial.Views;
+package ru.gwolk.librarysocial.Presenters;
 
 
 import com.vaadin.flow.component.grid.Grid;
@@ -9,21 +9,21 @@ import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.gwolk.librarysocial.CRUDRepositories.UserBookRepository;
 import ru.gwolk.librarysocial.Entities.UserBook;
-import ru.gwolk.librarysocial.Services.CurrentUserService;
-import ru.gwolk.librarysocial.Widgets.MainLayout;
+import ru.gwolk.librarysocial.SocialServices.CurrentUserService;
+import ru.gwolk.librarysocial.AppLayouts.MainLayout;
 
 import java.util.Collection;
 
 @Route(value = "user-books", layout = MainLayout.class)
 @PageTitle("Мои книги")
 @PermitAll
-public class UserBooksListView extends VerticalLayout {
+public class UserBooksListPresenter extends VerticalLayout {
     private final UserBookRepository userBookRepository;
     private final CurrentUserService currentUserService;
     private final Grid<UserBook> grid;
 
     @Autowired
-    public UserBooksListView(UserBookRepository userBookRepository, CurrentUserService currentUserService) {
+    public UserBooksListPresenter(UserBookRepository userBookRepository, CurrentUserService currentUserService) {
         this.userBookRepository = userBookRepository;
         this.currentUserService = currentUserService;
 

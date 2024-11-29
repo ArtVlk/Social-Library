@@ -1,4 +1,4 @@
-package ru.gwolk.librarysocial.Widgets;
+package ru.gwolk.librarysocial.AppLayouts;
 
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
@@ -14,10 +14,10 @@ import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.spring.security.AuthenticationContext;
 import com.vaadin.flow.theme.lumo.LumoUtility;
-import ru.gwolk.librarysocial.Views.BooksListView;
-import ru.gwolk.librarysocial.Views.SubscriptionsView;
-import ru.gwolk.librarysocial.Views.UserBooksListView;
-import ru.gwolk.librarysocial.Views.UsersListView;
+import ru.gwolk.librarysocial.Presenters.BooksListPresenter;
+import ru.gwolk.librarysocial.Presenters.SubscriptionsPresenter;
+import ru.gwolk.librarysocial.Presenters.UserBooksListPresenter;
+import ru.gwolk.librarysocial.Presenters.UsersListPresenter;
 
 public class MainLayout extends AppLayout {
     private final AuthenticationContext authenticationContext;
@@ -61,13 +61,13 @@ public class MainLayout extends AppLayout {
     private SideNav createSideNav() {
         SideNav nav = new SideNav();
 
-        nav.addItem(new SideNavItem("Пользователи", UsersListView.class,
+        nav.addItem(new SideNavItem("Пользователи", UsersListPresenter.class,
                 VaadinIcon.USER.create()));
-        nav.addItem(new SideNavItem("Подписки", SubscriptionsView.class,
+        nav.addItem(new SideNavItem("Подписки", SubscriptionsPresenter.class,
                 VaadinIcon.THUMBS_UP.create()));
-        nav.addItem(new SideNavItem("Книги", BooksListView.class,
+        nav.addItem(new SideNavItem("Книги", BooksListPresenter.class,
                 VaadinIcon.BOOK.create()));
-        nav.addItem(new SideNavItem("Мои книги", UserBooksListView.class,
+        nav.addItem(new SideNavItem("Мои книги", UserBooksListPresenter.class,
                 VaadinIcon.SHIELD.create()));
 
         return nav;

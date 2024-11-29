@@ -1,4 +1,4 @@
-package ru.gwolk.librarysocial.Widgets;
+package ru.gwolk.librarysocial.SubPresenters;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.notification.Notification;

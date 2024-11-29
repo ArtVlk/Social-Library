@@ -1,4 +1,4 @@
-package ru.gwolk.librarysocial.Views;
+package ru.gwolk.librarysocial.Presenters;
 
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -16,10 +16,10 @@ import com.vaadin.flow.server.auth.AnonymousAllowed;
 @Route("login")
 @PageTitle("Войти - SocialLibrary")
 @AnonymousAllowed
-public class LoginView extends VerticalLayout implements BeforeEnterObserver {
+public class LoginPresenter extends VerticalLayout implements BeforeEnterObserver {
     private LoginForm loginForm;
     private Button regButton;
-    public LoginView() {
+    public LoginPresenter() {
         loginForm = new LoginForm();
         regButton = new Button("Зарегистрироваться", VaadinIcon.ENTER.create());
         setSizeFull();

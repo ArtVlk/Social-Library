@@ -1,4 +1,4 @@
-package ru.gwolk.librarysocial.Views;
+package ru.gwolk.librarysocial.Presenters;
 
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -6,20 +6,18 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import ru.gwolk.librarysocial.CRUDRepositories.UserRepository;
-import ru.gwolk.librarysocial.Services.MyUserDetailsService;
-import ru.gwolk.librarysocial.Widgets.RegistrationForm;
-import ru.gwolk.librarysocial.Widgets.RegistrationFormBinder;
+import ru.gwolk.librarysocial.CommonServices.MyUserDetailsService;
+import ru.gwolk.librarysocial.CommonServices.RegistrationForm;
+import ru.gwolk.librarysocial.CommonServices.RegistrationFormBinder;
 
 @Route("registration")
 @PageTitle("Регистрация")
 @AnonymousAllowed
-public class RegistrationView extends VerticalLayout {
+public class RegistrationPresenter extends VerticalLayout {
     private final MyUserDetailsService userDetailsService;
     private H1 registrationTitle;
     @Autowired
-    public RegistrationView(MyUserDetailsService userDetailsService) {
+    public RegistrationPresenter(MyUserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
         registrationTitle = new H1("Регистрация");
         RegistrationForm registrationForm = new RegistrationForm();

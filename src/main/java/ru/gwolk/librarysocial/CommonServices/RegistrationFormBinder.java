@@ -1,4 +1,4 @@
-package ru.gwolk.librarysocial.Widgets;
+package ru.gwolk.librarysocial.CommonServices;
 
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.notification.Notification;
@@ -7,11 +7,10 @@ import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.data.binder.ValidationResult;
 import com.vaadin.flow.data.binder.ValueContext;
-import org.springframework.beans.factory.annotation.Autowired;
-import ru.gwolk.librarysocial.CRUDRepositories.UserRepository;
+import ru.gwolk.librarysocial.CommonServices.RegistrationForm;
 import ru.gwolk.librarysocial.Entities.User;
 import ru.gwolk.librarysocial.Entities.UserFromRegistration;
-import ru.gwolk.librarysocial.Services.MyUserDetailsService;
+import ru.gwolk.librarysocial.CommonServices.MyUserDetailsService;
 
 public class RegistrationFormBinder {
     private final RegistrationForm registrationForm;

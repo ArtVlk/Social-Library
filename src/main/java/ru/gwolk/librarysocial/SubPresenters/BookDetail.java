@@ -1,4 +1,4 @@
-package ru.gwolk.librarysocial.Widgets;
+package ru.gwolk.librarysocial.SubPresenters;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.notification.Notification;
@@ -13,11 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ru.gwolk.librarysocial.CRUDRepositories.BookRepository;
 import ru.gwolk.librarysocial.CRUDRepositories.UserRepository;
 import ru.gwolk.librarysocial.Entities.Book;
-import ru.gwolk.librarysocial.Entities.Role;
 import ru.gwolk.librarysocial.Entities.User;
 import ru.gwolk.librarysocial.Entities.UserBook;
 import ru.gwolk.librarysocial.CRUDRepositories.UserBookRepository;
-import ru.gwolk.librarysocial.Services.CurrentUserService;
+import ru.gwolk.librarysocial.SocialServices.CurrentUserService;
 
 import java.util.Optional;
 

@@ -1,4 +1,4 @@
-package ru.gwolk.librarysocial.Widgets;
+package ru.gwolk.librarysocial.SubPresenters;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -12,16 +12,17 @@ import ru.gwolk.librarysocial.CRUDRepositories.SubscriptionsRepository;
 import ru.gwolk.librarysocial.CRUDRepositories.UserRepository;
 import ru.gwolk.librarysocial.Entities.Subscription;
 import ru.gwolk.librarysocial.Entities.User;
-import ru.gwolk.librarysocial.Services.CurrentUserService;
-
-import java.util.List;
+import ru.gwolk.librarysocial.Presenters.SubscriptionsPresenter;
+import ru.gwolk.librarysocial.SocialServices.CurrentUserService;
+import ru.gwolk.librarysocial.SocialServices.SubscriptionsService;
+import ru.gwolk.librarysocial.SocialServices.UserEditorService;
 
 @SpringComponent
 @UIScope
-public class SubscriptionUserEditor extends VerticalLayout {
+public class SubscriptionUserEditorPresenter extends VerticalLayout {
     private SubscriptionsRepository subscriptionsRepository;
     private UserRepository userRepository;
-    private User subscibedUser;
+    private User subscribedUser;
     private User me;
     private TextField name;
     private Button lookFavouritesButton;
@@ -29,19 +30,24 @@ public class SubscriptionUserEditor extends VerticalLayout {
     private Binder<User> binder;
     private CurrentUserService currentUserService;
     private ChangeHandler changeHandler;
+    private SubscriptionsService subscriptionsService;
 
 
     @Autowired
-    public SubscriptionUserEditor(SubscriptionsRepository subscriptionsRepository, UserRepository userRepository,
-                                  CurrentUserService currentUserService) {
+    public SubscriptionUserEditorPresenter(SubscriptionsService subscriptionsService,
+                                           SubscriptionsRepository subscriptionsRepository,
+                                           UserRepository userRepository,
+                                           CurrentUserService currentUserService) {
+        this.subscriptionsService = subscriptionsService;
         this.subscriptionsRepository = subscriptionsRepository;
         this.currentUserService = currentUserService;
         this.userRepository = userRepository;
+
         name = new TextField("Имя");
         name.setReadOnly(true);
+
         lookFavouritesButton = new Button("Посмотреть избранное", VaadinIcon.BOOK.create());
         unsubscibeButton = new Button("Отписаться", VaadinIcon.UNLINK.create());
-        me = currentUserService.getCurrentUser();
 
         binder = new Binder<>(User.class);
         binder.bindInstanceFields(this);
@@ -49,18 +55,12 @@ public class SubscriptionUserEditor extends VerticalLayout {
         setHorizontalComponentAlignment(Alignment.CENTER, name, lookFavouritesButton, unsubscibeButton);
         add(name, lookFavouritesButton, unsubscibeButton);
 
-        unsubscibeButton.addClickListener(e -> unsubscribe());
+        unsubscibeButton.addClickListener(e -> subscriptionsService.unsubscribe(subscribedUser));
 
         setSpacing(true);
         setVisible(false);
     }
 
-    private void unsubscribe() {
-        Subscription subscription = subscriptionsRepository.findSubscriptionByUserAndSubscribedUser(me, subscibedUser);
-        subscriptionsRepository.delete(subscription);
-        setVisible(false);
-        changeHandler.onChange();
-    }
 
     public void editSubscription(User user) {
         if (user == null) {
@@ -69,17 +69,17 @@ public class SubscriptionUserEditor extends VerticalLayout {
         }
 
         if (user.getId() != null) {
-            this.subscibedUser = userRepository.findById(user.getId()).orElse(user);
+            this.subscribedUser = userRepository.findById(user.getId()).orElse(user);
         }
         else {
-            this.subscibedUser = user;
+            this.subscribedUser = user;
         }
 
-        binder.setBean(subscibedUser);
+        binder.setBean(subscribedUser);
         setVisible(true);
     }
     public void setChangeHandler(ChangeHandler changeHandler) {
-        this.changeHandler = changeHandler;
+        setVisible(false);
     }
 
     public interface ChangeHandler {

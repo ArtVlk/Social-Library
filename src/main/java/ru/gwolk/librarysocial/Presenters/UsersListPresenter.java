@@ -1,6 +1,5 @@
-package ru.gwolk.librarysocial.Views;
+package ru.gwolk.librarysocial.Presenters;
 
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -10,18 +9,15 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.spring.security.AuthenticationContext;
 import jakarta.annotation.security.PermitAll;
-import jakarta.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.gwolk.librarysocial.CRUDRepositories.UserRepository;
-import ru.gwolk.librarysocial.Entities.Role;
-import ru.gwolk.librarysocial.Entities.StringRoles;
+import ru.gwolk.librarysocial.CommonServices.PagesNavigator;
 import ru.gwolk.librarysocial.Entities.User;
 import ru.gwolk.librarysocial.Entities.PhoneNumber;
-import ru.gwolk.librarysocial.Utilities.RoleUtils;
-import ru.gwolk.librarysocial.Widgets.MainLayout;
-import ru.gwolk.librarysocial.Widgets.UserEditor;
+import ru.gwolk.librarysocial.SocialServices.UsersFilterService;
+import ru.gwolk.librarysocial.AppLayouts.MainLayout;
+import ru.gwolk.librarysocial.SubPresenters.UserEditorPresenter;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -29,58 +25,49 @@ import java.util.stream.Collectors;
 @Route(value = "", layout = MainLayout.class)
 @PageTitle("Пользователи")
 @PermitAll
-public class UsersListView extends VerticalLayout {
+public class UsersListPresenter extends VerticalLayout {
+    private final String SUBSCRIPTIONS_PAGE = "subscriptions";
     private final UserRepository userRepository;
     private final TextField filter = new TextField("", "Нажмите на фильтр");
     private final Button subscriptionsButton = new Button("Подписки", VaadinIcon.USER.create());
     private HorizontalLayout toolbar;
-    private final UserEditor userEditor;
+    private final UserEditorPresenter userEditorPresenter;
 
     private Grid<User> grid;
 
     @Autowired
-    public UsersListView(UserRepository userRepository, UserEditor editor, AuthenticationContext authenticationContext) {
+    public UsersListPresenter(UserRepository userRepository, UserEditorPresenter userEditorPresenter) {
+        this.userEditorPresenter = userEditorPresenter;
         this.userRepository = userRepository;
-        this.userEditor = editor;
         toolbar = new HorizontalLayout();
         grid = new Grid<>(User.class);
 
         setUsersGrid(grid);
+        UsersFilterService usersFilterService = new UsersFilterService(grid, userRepository);
 
         toolbar.add(filter, subscriptionsButton);
 
-        add(toolbar, grid, userEditor);
+        add(toolbar, grid, userEditorPresenter);
 
         filter.setValueChangeMode(ValueChangeMode.EAGER);
-        filter.addValueChangeListener(e -> showUser(e.getValue()));
+        filter.addValueChangeListener(e -> usersFilterService.showUser(e.getValue()));
 
 
         grid.asSingleSelect().addValueChangeListener(e -> {
-            userEditor.editUser(e.getValue());
+            userEditorPresenter.setEditingUser(e.getValue());
         });
 
 
-        subscriptionsButton.addClickListener(e -> {
-            UI.getCurrent().navigate("subscriptions");
-        });
+        subscriptionsButton.addClickListener(e -> PagesNavigator.navigateTo(SUBSCRIPTIONS_PAGE));
 
-        editor.setChangeHandler(() -> {
+        /*editor.setChangeHandler(() -> {
             editor.setVisible(false);
-            UsersListView.this.showUser(filter.getValue());
-        });
+            usersFilterService.showUser(filter.getValue());
+        });*/
 
         grid.setItems((Collection<User>) userRepository.findAll());
     }
 
-
-    private void showUser(String name) {
-        if (name.isEmpty()) {
-            grid.setItems((Collection<User>) userRepository.findAll());
-        }
-        else {
-            grid.setItems(userRepository.findByName(name));
-        }
-    }
 
     private void setUsersGrid(Grid<User> grid) {
         grid.setHeight("400px");

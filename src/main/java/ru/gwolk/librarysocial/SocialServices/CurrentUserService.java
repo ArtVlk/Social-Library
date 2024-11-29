@@ -1,4 +1,4 @@
-package ru.gwolk.librarysocial.Services;
+package ru.gwolk.librarysocial.SocialServices;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -11,6 +11,7 @@ import ru.gwolk.librarysocial.Entities.User;
 public class CurrentUserService {
     @Autowired
     private UserRepository userRepository;
+
     public String getCurrentUsername() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 

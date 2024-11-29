@@ -1,34 +1,25 @@
-package ru.gwolk.librarysocial.Widgets;
+package ru.gwolk.librarysocial.SubPresenters;
 
 import com.vaadin.flow.component.KeyNotifier;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.notification.NotificationVariant;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
-import jakarta.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.gwolk.librarysocial.CRUDRepositories.SubscriptionsRepository;
 import ru.gwolk.librarysocial.CRUDRepositories.UserRepository;
-import ru.gwolk.librarysocial.Entities.StringRoles;
-import ru.gwolk.librarysocial.Entities.Subscription;
 import ru.gwolk.librarysocial.Entities.User;
-import ru.gwolk.librarysocial.Services.CurrentUserService;
-import ru.gwolk.librarysocial.Utilities.RoleUtils;
-
-import java.util.List;
+import ru.gwolk.librarysocial.SocialServices.CurrentUserService;
+import ru.gwolk.librarysocial.SocialServices.UserEditorService;
 
 @SpringComponent
 @UIScope
-public class UserEditor extends VerticalLayout implements KeyNotifier {
+public class UserEditorPresenter extends VerticalLayout implements KeyNotifier {
     private final UserRepository userRepository;
-    private User user;
+    private User editingUser;
     private TextField name = new TextField("Имя");
     private Button subscribeButton = new Button("Подписаться", VaadinIcon.PLUS.create());
     private TextField gender = new TextField("Пол");
@@ -37,9 +28,6 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
     private ChangeHandler changeHandler;
     private CurrentUserService currentUserService;
     private SubscriptionsRepository subscriptionsRepository;
-    private Notification notificationWarning;
-    private Notification notificationOk;
-
 
     public void setChangeHandler(ChangeHandler changeHandler) {
         this.changeHandler = changeHandler;
@@ -50,11 +38,14 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
     }
 
     @Autowired
-    public UserEditor(UserRepository userRepository,SubscriptionsRepository subscriptionsRepository,
-                      CurrentUserService currentUserService) {
+    public UserEditorPresenter(UserRepository userRepository, CurrentUserService currentUserService,
+                               SubscriptionsRepository subscriptionsRepository) {
         this.userRepository = userRepository;
-        this.subscriptionsRepository = subscriptionsRepository;
         this.currentUserService = currentUserService;
+        this.subscriptionsRepository = subscriptionsRepository;
+
+        UserEditorService userEditorService = new UserEditorService(currentUserService, subscriptionsRepository);
+
         name.setReadOnly(true);
         gender.setReadOnly(true);
 
@@ -64,48 +55,27 @@ public class UserEditor extends VerticalLayout implements KeyNotifier {
 
         binder.bindInstanceFields(this);
 
-        notificationWarning = new Notification();
-
-        notificationOk = new Notification();
-
         setSpacing(true);
 
-        subscribeButton.addClickListener(e -> subscribe());
+        subscribeButton.addClickListener(e -> userEditorService.subscribe(editingUser));
         setVisible(false);
     }
 
-    private void subscribe() {
-        User me = currentUserService.getCurrentUser();
-        Subscription findingSubscription = subscriptionsRepository.findSubscriptionByUserAndSubscribedUser(me, user);
 
-        if (findingSubscription == null) {
-            Subscription subscription = new Subscription(me, user);
-            subscriptionsRepository.save(subscription);
-            notificationOk = Notification.show("✓");
-            notificationOk.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
-            changeHandler.onChange();
-        }
-        else {
-            notificationWarning = Notification.show("Вы уже подписаны на этого пользователя");
-            notificationWarning.addThemeVariants(NotificationVariant.LUMO_WARNING);
-        }
-    }
-
-
-    public void editUser(User newUser) {
+    public void setEditingUser(User newUser) {
         if (newUser == null) {
             setVisible(true);
             return;
         }
 
         if (newUser.getId() != null) {
-            this.user = userRepository.findById(newUser.getId()).orElse(newUser);
+            this.editingUser = userRepository.findById(newUser.getId()).orElse(newUser);
         }
         else {
-            this.user = newUser;
+            this.editingUser = newUser;
         }
 
-        binder.setBean(user);
+        binder.setBean(editingUser);
         setVisible(true);
     }
 

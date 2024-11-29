@@ -1,4 +1,4 @@
-package ru.gwolk.librarysocial.Views;
+package ru.gwolk.librarysocial.Presenters;
 
 
 import com.vaadin.flow.component.button.Button;
@@ -15,18 +15,18 @@ import ru.gwolk.librarysocial.CRUDRepositories.BookRepository;
 import ru.gwolk.librarysocial.Entities.Book;
 import ru.gwolk.librarysocial.Entities.Role;
 import ru.gwolk.librarysocial.Entities.User;
-import ru.gwolk.librarysocial.Services.CurrentUserService;
-import ru.gwolk.librarysocial.Widgets.BookDetail;
-import ru.gwolk.librarysocial.Widgets.BookEditor;
-import ru.gwolk.librarysocial.Widgets.BookForm;
-import ru.gwolk.librarysocial.Widgets.MainLayout;
+import ru.gwolk.librarysocial.SocialServices.CurrentUserService;
+import ru.gwolk.librarysocial.SubPresenters.BookDetail;
+import ru.gwolk.librarysocial.SubPresenters.BookEditor;
+import ru.gwolk.librarysocial.SubPresenters.BookForm;
+import ru.gwolk.librarysocial.AppLayouts.MainLayout;
 
 import java.util.Collection;
 
 @Route(value = "books", layout = MainLayout.class)
 @PageTitle("Книги")
 @PermitAll
-public class BooksListView extends VerticalLayout {
+public class BooksListPresenter extends VerticalLayout {
     private final BookRepository bookRepository;
     private final CurrentUserService currentUserService;
     private final TextField filter = new TextField("", "Нажмите на фильтр");
@@ -38,8 +38,8 @@ public class BooksListView extends VerticalLayout {
 
 
     @Autowired
-    public BooksListView(BookRepository bookRepository, CurrentUserService currentUserService,
-                         BookDetail bookDetail, BookForm bookForm, BookEditor bookEditor){
+    public BooksListPresenter(BookRepository bookRepository, CurrentUserService currentUserService,
+                              BookDetail bookDetail, BookForm bookForm, BookEditor bookEditor){
         this.bookRepository = bookRepository;
         this.bookDetail = bookDetail;
         this.bookForm = bookForm;

@@ -1,4 +1,4 @@
-package ru.gwolk.librarysocial.Services;
+package ru.gwolk.librarysocial.CommonServices;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
