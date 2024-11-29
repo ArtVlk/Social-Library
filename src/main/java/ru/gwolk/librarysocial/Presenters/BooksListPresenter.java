@@ -47,8 +47,8 @@ public class BooksListPresenter extends VerticalLayout {
         this.currentUserService = currentUserService;
 
         grid = new Grid<>(Book.class);
-
         setBooksGrid(grid);
+
         add(new HorizontalLayout(filter), grid, addBookButton, bookDetail, bookForm, bookEditor);
 
         filter.setValueChangeMode(ValueChangeMode.EAGER);

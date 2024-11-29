@@ -9,9 +9,12 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import ru.gwolk.librarysocial.CRUDRepositories.AuthorRepository;
 import ru.gwolk.librarysocial.CRUDRepositories.BookRepository;
 import ru.gwolk.librarysocial.CRUDRepositories.GenreRepository;
+import ru.gwolk.librarysocial.CRUDRepositories.UserBookRepository;
+import ru.gwolk.librarysocial.CommonServices.BookService;
 import ru.gwolk.librarysocial.Entities.Author;
 import ru.gwolk.librarysocial.Entities.Book;
 import ru.gwolk.librarysocial.Entities.Genre;
@@ -20,9 +23,12 @@ import ru.gwolk.librarysocial.Entities.Genre;
 @SpringComponent
 @UIScope
 public class BookEditor extends VerticalLayout {
+    private final BookService bookService;
+
     private final BookRepository bookRepository;
     private final AuthorRepository authorRepository;
     private final GenreRepository genreRepository;
+    private final UserBookRepository userBookRepository;
 
     private TextField nameField = new TextField("Название");
     private TextField authorField = new TextField("Автор");
@@ -30,26 +36,41 @@ public class BookEditor extends VerticalLayout {
     private TextField descriptionField = new TextField("Описание");
     private Button saveButton = new Button("Сохранить");
     private Button cancelButton = new Button("Отмена");
+    private Button deleteButton = new Button("Удалить");
 
     private Book currentBook;
 
     @Autowired
-    public BookEditor(BookRepository bookRepository, AuthorRepository authorRepository, GenreRepository genreRepository) {
+    public BookEditor(BookRepository bookRepository, AuthorRepository authorRepository,
+                      GenreRepository genreRepository, UserBookRepository userBookRepository,
+                      BookService bookService) {
         this.bookRepository = bookRepository;
         this.authorRepository = authorRepository;
         this.genreRepository = genreRepository;
+        this.userBookRepository = userBookRepository;
+        this.bookService = bookService;
 
         descriptionField.setWidth("60%");
         descriptionField.setHeight("200px");
 
         HorizontalLayout actionsLayout = new HorizontalLayout(saveButton, cancelButton);
 
+        deleteButton.getStyle()
+                .set("background-color", "red").set("color", "white");
+
         setHorizontalComponentAlignment(Alignment.CENTER, nameField, authorField,
-                genreField, descriptionField, actionsLayout);
-        add(nameField, authorField, genreField, descriptionField, actionsLayout);
+                genreField, descriptionField, actionsLayout, deleteButton);
+        add(nameField, authorField, genreField, descriptionField, actionsLayout, deleteButton);
 
         saveButton.addClickListener(e -> saveBook());
         cancelButton.addClickListener(e -> cancelEditing());
+        deleteButton.addClickListener(e -> {
+            if (currentBook != null) {
+                deleteBook();
+            } else {
+                Notification.show("Не выбрана книга для удаления");
+            }
+        });
 
         setVisible(false);
     }
@@ -100,6 +121,16 @@ public class BookEditor extends VerticalLayout {
 
         Notification.show("Книга успешно сохранена!");
         setVisible(false);
+    }
+
+    private void deleteBook() {
+        if (currentBook != null) {
+            bookService.deleteBook(currentBook.getId());
+            Notification.show("Книга успешно удалена!");
+            setVisible(false);
+        } else {
+            Notification.show("Не выбрана книга для удаления");
+        }
     }
 
     private void cancelEditing() {

@@ -6,6 +6,7 @@ import ru.gwolk.librarysocial.Entities.Book;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Repository
@@ -14,4 +15,8 @@ public interface BookRepository extends CrudRepository<Book, Long>{
 
     @Query("SELECT MAX(b.id) FROM Book b")
     Long findMaxId();
+
+    void deleteById(Long id);
+    Optional<Book> findById(Long id);
+
 }

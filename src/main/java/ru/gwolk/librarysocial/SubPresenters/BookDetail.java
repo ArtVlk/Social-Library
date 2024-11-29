@@ -28,7 +28,6 @@ public class BookDetail extends VerticalLayout {
     private final CurrentUserService currentUserService;
     private final UserRepository userRepository;
     private Book currentBook;
-    private Button cancelButton = new Button("Отмена");
 
     private final TextField authorField = new TextField("Автор и название");
     private final TextArea descriptionField = new TextArea("Описание");
@@ -36,6 +35,7 @@ public class BookDetail extends VerticalLayout {
     private Button saveRatingButton = new Button("Сохранить оценку");
     private final NumberField newRatingField = new NumberField("Поставить оценку");
     private Button addToLibraryButton = new Button("Добавить в библиотеку");
+    private Button cancelButton = new Button("Отмена");
 
     @Autowired
     public BookDetail(BookRepository bookRepository, UserBookRepository userBookRepository,

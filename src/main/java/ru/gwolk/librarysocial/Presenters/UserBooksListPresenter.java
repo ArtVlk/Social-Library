@@ -2,15 +2,20 @@ package ru.gwolk.librarysocial.Presenters;
 
 
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.gwolk.librarysocial.CRUDRepositories.UserBookRepository;
+import ru.gwolk.librarysocial.Entities.Book;
 import ru.gwolk.librarysocial.Entities.UserBook;
 import ru.gwolk.librarysocial.SocialServices.CurrentUserService;
 import ru.gwolk.librarysocial.AppLayouts.MainLayout;
+import ru.gwolk.librarysocial.SubPresenters.PersonalBookDetail;
 
 import java.util.Collection;
 
@@ -20,17 +25,34 @@ import java.util.Collection;
 public class UserBooksListPresenter extends VerticalLayout {
     private final UserBookRepository userBookRepository;
     private final CurrentUserService currentUserService;
+    private final TextField filter = new TextField("", "Нажмите на фильтр");
+    private final PersonalBookDetail personalBookDetail;
     private final Grid<UserBook> grid;
 
     @Autowired
-    public UserBooksListPresenter(UserBookRepository userBookRepository, CurrentUserService currentUserService) {
+    public UserBooksListPresenter(UserBookRepository userBookRepository, CurrentUserService currentUserService,
+                                  PersonalBookDetail personalBookDetail) {
         this.userBookRepository = userBookRepository;
         this.currentUserService = currentUserService;
+        this.personalBookDetail = personalBookDetail;
 
         grid = new Grid<>(UserBook.class);
         setUserBooksGrid(grid);
 
-        add(grid);
+        add(new HorizontalLayout(filter), grid, personalBookDetail);
+
+        filter.setValueChangeMode(ValueChangeMode.EAGER);
+        filter.addValueChangeListener(e -> showBook(e.getValue()));
+
+        personalBookDetail.setVisible(false);
+
+        grid.asSingleSelect().addValueChangeListener(event -> {
+            UserBook selectedUserBook = event.getValue();
+            if (selectedUserBook != null){
+                personalBookDetail.editBook(selectedUserBook);
+                personalBookDetail.setVisible(true);
+            } else {personalBookDetail.setVisible(false);}
+        });
 
         loadUserBooks();
     }
@@ -53,5 +75,14 @@ public class UserBooksListPresenter extends VerticalLayout {
     private void loadUserBooks() {
         Collection<UserBook> userBooks = userBookRepository.findByUser(currentUserService.getCurrentUser());
         grid.setItems(userBooks);
+    }
+
+    private void showBook(String filterText) {
+        if (filterText == null || filterText.isEmpty()) {
+            loadUserBooks();
+        } else {
+            Collection<UserBook> filteredBooks = userBookRepository.findByUserAndBookNameContaining(currentUserService.getCurrentUser(), filterText);
+            grid.setItems(filteredBooks);
+        }
     }
 }

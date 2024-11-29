@@ -19,6 +19,8 @@ public class UserBook {
 
     private Integer userRating;
 
+    private String review;
+
     public UserBook (User user, Book book, Integer userRating) {
         this.user = user;
         this.book = book;
@@ -51,5 +53,13 @@ public class UserBook {
 
     public void setBook(Book book) {
         this.book = book;
+    }
+
+    public String getReview() {
+        return review;
+    }
+
+    public void setReview(String review) {
+        this.review = review;
     }
 }
