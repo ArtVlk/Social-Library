@@ -19,4 +19,6 @@ public interface BookRepository extends CrudRepository<Book, Long>{
     void deleteById(Long id);
     Optional<Book> findById(Long id);
 
+    List<Book> findByNameContaining(String namePart);
+
 }

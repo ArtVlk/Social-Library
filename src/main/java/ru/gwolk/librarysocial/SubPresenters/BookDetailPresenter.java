@@ -22,7 +22,7 @@ import java.util.Optional;
 
 @SpringComponent
 @UIScope
-public class BookDetail extends VerticalLayout {
+public class BookDetailPresenter extends VerticalLayout {
     private final UserBookRepository userBookRepository;
     private final BookRepository bookRepository;
     private final CurrentUserService currentUserService;
@@ -38,8 +38,8 @@ public class BookDetail extends VerticalLayout {
     private Button cancelButton = new Button("Отмена");
 
     @Autowired
-    public BookDetail(BookRepository bookRepository, UserBookRepository userBookRepository,
-                      CurrentUserService currentUserService, UserRepository userRepository) {
+    public BookDetailPresenter(BookRepository bookRepository, UserBookRepository userBookRepository,
+                               CurrentUserService currentUserService, UserRepository userRepository) {
         this.userBookRepository = userBookRepository;
         this.bookRepository = bookRepository;
         this.currentUserService = currentUserService;
@@ -54,13 +54,13 @@ public class BookDetail extends VerticalLayout {
 
         setHorizontalComponentAlignment(Alignment.CENTER, authorField, descriptionField, addToLibraryButton, ratingField,
                 newRatingField, actionsLayout);
-        add(authorField, descriptionField, addToLibraryButton, ratingField, newRatingField, actionsLayout);
+        add(authorField, descriptionField, ratingField, newRatingField, addToLibraryButton, actionsLayout);
 
         authorField.setReadOnly(true);
         descriptionField.setReadOnly(true);
         ratingField.setReadOnly(true);
 
-        addToLibraryButton.addClickListener(e -> addToLibrary());
+        addToLibraryButton.addClickListener(e -> addBookToUserLibrary(currentUserService.getCurrentUser()));
         saveRatingButton.addClickListener(e -> saveRating());
         cancelButton.addClickListener(e -> cancelWatching());
 
@@ -71,43 +71,20 @@ public class BookDetail extends VerticalLayout {
         setVisible(false);
     }
 
-    private void addToLibrary() {
-        if (!validateAddToLibraryInputs()) return;
-        User currentUser = currentUserService.getCurrentUser();
-        if (isBookAlreadyInLibrary(currentUser)) {
-            Notification.show("Эта книга уже в вашей библиотеке.");
-        } else {
-            addBookToUserLibrary(currentUser);
-            Notification.show("Книга добавлена в вашу библиотеку.");
-        }
-    }
-
-
-    private boolean validateAddToLibraryInputs() {
-        if (currentBook == null) {
-            Notification.show("Ошибка: книга не найдена. Пожалуйста, выберите книгу из списка.");
-            return false;
-        }
-        if (currentUserService.getCurrentUser() == null) {
-            Notification.show("Ошибка: пользователь не выбран.");
-            return false;
-        }
-        return true;
-    }
-
-    private boolean isBookAlreadyInLibrary(User currentUser) {
-        return userBookRepository.findByUserAndBook(currentUser, currentBook).isPresent();
-    }
-
     private void addBookToUserLibrary(User currentUser) {
+
+        if (userBookRepository.findByUserAndBook(currentUser, currentBook).isPresent()) {
+            Notification.show("Эта книга уже в вашей библиотеке.");
+            return;
+        }
+
         UserBook userBook = new UserBook();
         userBook.setUser(currentUser);
         userBook.setBook(currentBook);
         userBook.setUserRating(currentBook.getStars());
-        currentUser.getBooks().add(currentBook);
 
         userBookRepository.save(userBook);
-        userRepository.save(currentUser);
+        Notification.show("Книга добавлена в вашу библиотеку.");
     }
 
     public void editBook(Book book) {
@@ -141,6 +118,8 @@ public class BookDetail extends VerticalLayout {
         bookRepository.save(currentBook);
 
         Notification.show("Оценка сохранена!");
+
+
     }
 
     private void initializeBookRatingFields() {
@@ -154,7 +133,6 @@ public class BookDetail extends VerticalLayout {
 
     private boolean validateSaveRatingInputs() {
         if (currentBook == null) {
-            Notification.show("Ошибка: книга не выбрана");
             return false;
         }
 

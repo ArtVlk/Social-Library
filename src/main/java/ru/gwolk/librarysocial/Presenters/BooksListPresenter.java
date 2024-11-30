@@ -12,13 +12,14 @@ import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.gwolk.librarysocial.CRUDRepositories.BookRepository;
+import ru.gwolk.librarysocial.CommonServices.BookService;
 import ru.gwolk.librarysocial.Entities.Book;
 import ru.gwolk.librarysocial.Entities.Role;
 import ru.gwolk.librarysocial.Entities.User;
 import ru.gwolk.librarysocial.SocialServices.CurrentUserService;
-import ru.gwolk.librarysocial.SubPresenters.BookDetail;
-import ru.gwolk.librarysocial.SubPresenters.BookEditor;
-import ru.gwolk.librarysocial.SubPresenters.BookForm;
+import ru.gwolk.librarysocial.SubPresenters.BookDetailPresenter;
+import ru.gwolk.librarysocial.SubPresenters.BookEditorPresenter;
+import ru.gwolk.librarysocial.SubPresenters.BookFormPresenter;
 import ru.gwolk.librarysocial.AppLayouts.MainLayout;
 
 import java.util.Collection;
@@ -32,54 +33,57 @@ public class BooksListPresenter extends VerticalLayout {
     private final TextField filter = new TextField("", "Нажмите на фильтр");
     private final Grid<Book> grid;
     private final Button addBookButton = new Button("Добавить книгу");
-    private final BookDetail bookDetail;
-    private final BookForm bookForm;
-    private final BookEditor bookEditor;
+    private final BookDetailPresenter bookDetailPresenter;
+    private final BookFormPresenter bookFormPresenter;
+    private final BookEditorPresenter bookEditorPresenter;
+    private final BookService bookService;
 
 
     @Autowired
     public BooksListPresenter(BookRepository bookRepository, CurrentUserService currentUserService,
-                              BookDetail bookDetail, BookForm bookForm, BookEditor bookEditor){
+                              BookDetailPresenter bookDetailPresenter, BookFormPresenter bookFormPresenter,
+                              BookEditorPresenter bookEditorPresenter, BookService bookService){
         this.bookRepository = bookRepository;
-        this.bookDetail = bookDetail;
-        this.bookForm = bookForm;
-        this.bookEditor = bookEditor;
+        this.bookDetailPresenter = bookDetailPresenter;
+        this.bookFormPresenter = bookFormPresenter;
+        this.bookEditorPresenter = bookEditorPresenter;
         this.currentUserService = currentUserService;
+        this.bookService = bookService;
 
         grid = new Grid<>(Book.class);
         setBooksGrid(grid);
 
-        add(new HorizontalLayout(filter), grid, addBookButton, bookDetail, bookForm, bookEditor);
+        add(new HorizontalLayout(filter), grid, addBookButton, bookDetailPresenter, bookFormPresenter, bookEditorPresenter);
 
         filter.setValueChangeMode(ValueChangeMode.EAGER);
         filter.addValueChangeListener(e -> showBook(e.getValue()));
 
-        bookDetail.setVisible(false);
-        bookForm.setVisible(false);
-        bookEditor.setVisible(false);
+        bookDetailPresenter.setVisible(false);
+        bookFormPresenter.setVisible(false);
+        bookEditorPresenter.setVisible(false);
 
         showAddBookButton();
 
         grid.asSingleSelect().addValueChangeListener(event -> {
             if (event.getValue() != null) {
                 if (currentUserService.getCurrentUser().getRole() == Role.ADMIN) {
-                    bookEditor.editBook(event.getValue());
-                    bookEditor.setVisible(true);
-                    bookDetail.setVisible(false);
+                    bookEditorPresenter.editBook(event.getValue());
+                    bookEditorPresenter.setVisible(true);
+                    bookDetailPresenter.setVisible(false);
                 } else {
-                    bookDetail.editBook(event.getValue());
-                    bookDetail.setVisible(true);
-                    bookEditor.setVisible(false);
+                    bookDetailPresenter.editBook(event.getValue());
+                    bookDetailPresenter.setVisible(true);
+                    bookEditorPresenter.setVisible(false);
                 }
-                bookForm.setVisible(false);
+                bookFormPresenter.setVisible(false);
             } else {
-                bookDetail.setVisible(false);
-                bookEditor.setVisible(false);
+                bookDetailPresenter.setVisible(false);
+                bookEditorPresenter.setVisible(false);
             }
         });
 
 
-        grid.setItems((Collection<Book>) bookRepository.findAll());
+        bookService.updateGrid(grid);
 
         addBookButton.addClickListener(e -> openBookForm());
 
@@ -95,16 +99,19 @@ public class BooksListPresenter extends VerticalLayout {
     }
 
     private void openBookForm() {
-        bookForm.setVisible(true);
-        bookDetail.setVisible(false);
+        bookFormPresenter.setVisible(true);
+        bookDetailPresenter.setVisible(false);
     }
 
-    private void showBook(String name) {
-        if (name.isEmpty()) {
+    public void updateGrid() {
+        grid.setItems((Collection<Book>) bookRepository.findAll());
+    }
+
+    private void showBook(String filterText) {
+        if (filterText == null || filterText.isEmpty()) {
             grid.setItems((Collection<Book>) bookRepository.findAll());
-        }
-        else {
-            grid.setItems(bookRepository.findByName(name));
+        } else {
+            grid.setItems(bookRepository.findByNameContaining(filterText));
         }
     }
 

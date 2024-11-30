@@ -9,7 +9,6 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 import ru.gwolk.librarysocial.CRUDRepositories.AuthorRepository;
 import ru.gwolk.librarysocial.CRUDRepositories.BookRepository;
 import ru.gwolk.librarysocial.CRUDRepositories.GenreRepository;
@@ -22,7 +21,7 @@ import ru.gwolk.librarysocial.Entities.Genre;
 
 @SpringComponent
 @UIScope
-public class BookEditor extends VerticalLayout {
+public class BookEditorPresenter extends VerticalLayout {
     private final BookService bookService;
 
     private final BookRepository bookRepository;
@@ -41,9 +40,9 @@ public class BookEditor extends VerticalLayout {
     private Book currentBook;
 
     @Autowired
-    public BookEditor(BookRepository bookRepository, AuthorRepository authorRepository,
-                      GenreRepository genreRepository, UserBookRepository userBookRepository,
-                      BookService bookService) {
+    public BookEditorPresenter(BookRepository bookRepository, AuthorRepository authorRepository,
+                               GenreRepository genreRepository, UserBookRepository userBookRepository,
+                               BookService bookService) {
         this.bookRepository = bookRepository;
         this.authorRepository = authorRepository;
         this.genreRepository = genreRepository;

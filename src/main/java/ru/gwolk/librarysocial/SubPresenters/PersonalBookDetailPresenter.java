@@ -19,7 +19,7 @@ import java.util.Optional;
 
 @SpringComponent
 @UIScope
-public class PersonalBookDetail extends VerticalLayout {
+public class PersonalBookDetailPresenter extends VerticalLayout {
     private final UserBookRepository userBookRepository;
     private final BookRepository bookRepository;
     private final CurrentUserService currentUserService;
@@ -35,8 +35,8 @@ public class PersonalBookDetail extends VerticalLayout {
     private Button deleteFromUserLibraryButton = new Button("Удалить");
     private Button cancelButton = new Button("Отмена");
 
-    public PersonalBookDetail(BookRepository bookRepository, UserBookRepository userBookRepository,
-                              CurrentUserService currentUserService, UserRepository userRepository) {
+    public PersonalBookDetailPresenter(BookRepository bookRepository, UserBookRepository userBookRepository,
+                                       CurrentUserService currentUserService, UserRepository userRepository) {
         this.userBookRepository = userBookRepository;
         this.bookRepository = bookRepository;
         this.currentUserService = currentUserService;
@@ -88,7 +88,6 @@ public class PersonalBookDetail extends VerticalLayout {
             return;
         }
 
-        // Инициализация значений, если они null
         if (currentBook.getSumStars() == null) {
             currentBook.setSumStars(currentBook.getStars());
         }
@@ -165,6 +164,7 @@ public class PersonalBookDetail extends VerticalLayout {
             UserBook userBook = userBookOptional.get();
             removeUserRatingFromBook(userBook);
             userBookRepository.delete(userBook);
+            //userBook.
 
             Notification.show("Книга удалена из вашей библиотеки.");
         } else {

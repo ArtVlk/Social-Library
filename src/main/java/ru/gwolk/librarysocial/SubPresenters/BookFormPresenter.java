@@ -19,7 +19,7 @@ import ru.gwolk.librarysocial.Entities.Genre;
 
 @SpringComponent
 @UIScope
-public class BookForm extends VerticalLayout {
+public class BookFormPresenter extends VerticalLayout {
     private final BookRepository bookRepository;
     private final AuthorRepository authorRepository;
     private final GenreRepository genreRepository;
@@ -33,7 +33,7 @@ public class BookForm extends VerticalLayout {
     private Button cancelButton = new Button("Отмена");
 
     @Autowired
-    public BookForm(BookRepository bookRepository, AuthorRepository authorRepository, GenreRepository genreRepository) {
+    public BookFormPresenter(BookRepository bookRepository, AuthorRepository authorRepository, GenreRepository genreRepository) {
         this.bookRepository = bookRepository;
         this.authorRepository = authorRepository;
         this.genreRepository = genreRepository;
