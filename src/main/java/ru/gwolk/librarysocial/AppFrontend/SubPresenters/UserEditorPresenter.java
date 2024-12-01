@@ -20,7 +20,6 @@ import ru.gwolk.librarysocial.AppBackend.SocialServices.UserEditorService;
 
 @SpringComponent
 @UIScope
-@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class UserEditorPresenter extends VerticalLayout implements KeyNotifier {
     private final UserRepository userRepository;
     private User editingUser;

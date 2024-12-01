@@ -1,6 +1,7 @@
 package ru.gwolk.librarysocial.AppBackend.CommonServices;
 
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.spring.annotation.UIScope;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +14,7 @@ import java.util.Collection;
 import java.util.Optional;
 
 @Service
+@UIScope
 public class BookService {
     private final BookRepository bookRepository;
     private final UserBookRepository userBookRepository;

@@ -3,7 +3,10 @@ package ru.gwolk.librarysocial.AppBackend.SocialServices;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
+import com.vaadin.flow.spring.annotation.UIScope;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import ru.gwolk.librarysocial.AppBackend.CRUDRepositories.UserRepository;
 import ru.gwolk.librarysocial.AppBackend.Entities.PhoneNumber;
@@ -18,6 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class UserEditorService {
     private CurrentUserService currentUserService;
     private SubscriptionsRepository subscriptionsRepository;

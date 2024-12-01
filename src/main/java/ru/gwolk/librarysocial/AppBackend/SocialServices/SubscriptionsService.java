@@ -1,7 +1,10 @@
 package ru.gwolk.librarysocial.AppBackend.SocialServices;
 
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.spring.annotation.UIScope;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import ru.gwolk.librarysocial.AppBackend.Entities.PhoneNumber;
 import ru.gwolk.librarysocial.AppBackend.Entities.User;
@@ -14,6 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class SubscriptionsService {
     private SubscriptionsRepository subscriptionsRepository;
     private UserBookRepository userBookRepository;

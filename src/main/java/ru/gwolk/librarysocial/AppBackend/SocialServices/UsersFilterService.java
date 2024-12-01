@@ -1,19 +1,15 @@
 package ru.gwolk.librarysocial.AppBackend.SocialServices;
 
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.spring.annotation.UIScope;
 import ru.gwolk.librarysocial.AppBackend.CRUDRepositories.UserRepository;
 import ru.gwolk.librarysocial.AppBackend.Entities.User;
 
 import java.util.Collection;
 
-
 public class UsersFilterService {
 
     private UserRepository userRepository;
-    /*@Autowired
-    public UsersFilterService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }*/
     private Grid<User> grid;
     public UsersFilterService(Grid<User> grid, UserRepository userRepository) {
         this.grid = grid;
