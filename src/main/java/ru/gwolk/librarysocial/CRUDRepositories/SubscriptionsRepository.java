@@ -13,6 +13,9 @@ public interface SubscriptionsRepository extends CrudRepository<Subscription, Lo
     @Query("SELECT s FROM Subscription s WHERE s.user = :user")
     List<Subscription> findSubscriptionsByUser(User user);
 
+    @Query("SELECT s FROM Subscription s WHERE s.subscribedUser = :subscribedUser")
+    List<Subscription> findSubscriptionsBySubscribedUser(User subscribedUser);
+
     @Query("SELECT s.subscribedUser FROM Subscription s")
     List<User> findAllSubscribedUsers();
 

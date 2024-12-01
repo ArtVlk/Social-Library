@@ -8,57 +8,65 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
+import com.vaadin.flow.spring.security.AuthenticationContext;
+import com.vaadin.flow.theme.lumo.LumoUtility;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import ru.gwolk.librarysocial.CRUDRepositories.SubscriptionsRepository;
 import ru.gwolk.librarysocial.CRUDRepositories.UserRepository;
+import ru.gwolk.librarysocial.Entities.Role;
+import ru.gwolk.librarysocial.Entities.StringRoles;
 import ru.gwolk.librarysocial.Entities.User;
 import ru.gwolk.librarysocial.SocialServices.CurrentUserService;
 import ru.gwolk.librarysocial.SocialServices.UserEditorService;
 
 @SpringComponent
 @UIScope
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class UserEditorPresenter extends VerticalLayout implements KeyNotifier {
     private final UserRepository userRepository;
     private User editingUser;
     private TextField name = new TextField("Имя");
     private Button subscribeButton = new Button("Подписаться", VaadinIcon.PLUS.create());
     private TextField gender = new TextField("Пол");
-    public Button lookFavouritesButton = new Button("Посмотреть избранное", VaadinIcon.BOOK.create());
+    private Button lookFavouritesButton = new Button("Посмотреть избранное", VaadinIcon.BOOK.create());
+    private Button banUserButton = new Button("Забанить", VaadinIcon.BAN.create());
     private Binder<User> binder = new Binder<>(User.class);
-    private ChangeHandler changeHandler;
-    private CurrentUserService currentUserService;
-    private SubscriptionsRepository subscriptionsRepository;
 
-    public void setChangeHandler(ChangeHandler changeHandler) {
-        this.changeHandler = changeHandler;
-    }
 
-    public interface ChangeHandler {
-        void onChange();
-    }
+
 
     @Autowired
-    public UserEditorPresenter(UserRepository userRepository, CurrentUserService currentUserService,
-                               SubscriptionsRepository subscriptionsRepository) {
+    public UserEditorPresenter(UserRepository userRepository,
+                               AuthenticationContext authenticationContext,
+                               UserEditorService userEditorService) {
         this.userRepository = userRepository;
-        this.currentUserService = currentUserService;
-        this.subscriptionsRepository = subscriptionsRepository;
-
-        UserEditorService userEditorService = new UserEditorService(currentUserService, subscriptionsRepository);
 
         name.setReadOnly(true);
         gender.setReadOnly(true);
+        banUserButton.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.TextColor.ERROR);
 
-        setHorizontalComponentAlignment(Alignment.CENTER, name, gender, subscribeButton, lookFavouritesButton);
+        setHorizontalComponentAlignment(Alignment.CENTER, name, gender, subscribeButton, lookFavouritesButton, banUserButton);
 
-        add(name, gender, subscribeButton, lookFavouritesButton);
+        addComponentsByRoles(authenticationContext);
 
         binder.bindInstanceFields(this);
 
         setSpacing(true);
 
         subscribeButton.addClickListener(e -> userEditorService.subscribe(editingUser));
+        banUserButton.addClickListener(e -> userEditorService.ban(editingUser));
         setVisible(false);
+    }
+
+    private void addComponentsByRoles(AuthenticationContext authenticationContext) {
+        if (authenticationContext.hasRole(StringRoles.ADMIN)) {
+            add(name, gender, subscribeButton, lookFavouritesButton, banUserButton);
+        }
+        else {
+            add(name, gender, subscribeButton, lookFavouritesButton);
+        }
     }
 
 
@@ -78,5 +86,7 @@ public class UserEditorPresenter extends VerticalLayout implements KeyNotifier {
         binder.setBean(editingUser);
         setVisible(true);
     }
+
+
 
 }

@@ -15,6 +15,7 @@ import ru.gwolk.librarysocial.CRUDRepositories.UserRepository;
 import ru.gwolk.librarysocial.CommonServices.PagesNavigator;
 import ru.gwolk.librarysocial.Entities.User;
 import ru.gwolk.librarysocial.Entities.PhoneNumber;
+import ru.gwolk.librarysocial.SocialServices.UserEditorService;
 import ru.gwolk.librarysocial.SocialServices.UsersFilterService;
 import ru.gwolk.librarysocial.AppLayouts.MainLayout;
 import ru.gwolk.librarysocial.SubPresenters.UserEditorPresenter;
@@ -33,54 +34,35 @@ public class UsersListPresenter extends VerticalLayout {
     private HorizontalLayout toolbar;
     private final UserEditorPresenter userEditorPresenter;
 
-    private Grid<User> grid;
+    private Grid<User> usersGrid;
 
     @Autowired
-    public UsersListPresenter(UserRepository userRepository, UserEditorPresenter userEditorPresenter) {
+    public UsersListPresenter(UserRepository userRepository,
+                              UserEditorPresenter userEditorPresenter,
+                              UserEditorService userEditorService) {
         this.userEditorPresenter = userEditorPresenter;
         this.userRepository = userRepository;
         toolbar = new HorizontalLayout();
-        grid = new Grid<>(User.class);
+        usersGrid = userEditorService.getUsersGrid();
 
-        setUsersGrid(grid);
-        UsersFilterService usersFilterService = new UsersFilterService(grid, userRepository);
+        UsersFilterService usersFilterService = new UsersFilterService(usersGrid, userRepository);
 
         toolbar.add(filter, subscriptionsButton);
 
-        add(toolbar, grid, userEditorPresenter);
+        add(toolbar, usersGrid, userEditorPresenter);
 
         filter.setValueChangeMode(ValueChangeMode.EAGER);
         filter.addValueChangeListener(e -> usersFilterService.showUser(e.getValue()));
 
 
-        grid.asSingleSelect().addValueChangeListener(e -> {
+        usersGrid.asSingleSelect().addValueChangeListener(e -> {
             userEditorPresenter.setEditingUser(e.getValue());
         });
 
 
         subscriptionsButton.addClickListener(e -> PagesNavigator.navigateTo(SUBSCRIPTIONS_PAGE));
 
-        /*editor.setChangeHandler(() -> {
-            editor.setVisible(false);
-            usersFilterService.showUser(filter.getValue());
-        });*/
-
-        grid.setItems((Collection<User>) userRepository.findAll());
+        usersGrid.setItems((Collection<User>) userRepository.findAll());
     }
 
-
-    private void setUsersGrid(Grid<User> grid) {
-        grid.setHeight("400px");
-        grid.setWidth("900px");
-        grid.setColumns();
-
-        grid.addColumn(User::getName).setHeader("Имя").setWidth("540px");
-        grid.addColumn(User::getGender).setHeader("Пол").setWidth("90px");
-        grid.addColumn(user -> user.getPhoneNumbers().stream()
-                .map(PhoneNumber::getNumber)
-                .collect(Collectors.joining(", "))).setHeader("Номер телефона").setWidth("270px");
-
-        grid.getElement().getStyle().set("margin-left", "auto");
-        grid.getElement().getStyle().set("margin-right", "auto");
-    }
 }

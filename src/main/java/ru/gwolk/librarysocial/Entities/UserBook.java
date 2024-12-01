@@ -35,6 +35,14 @@ public class UserBook {
         return userRating;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public void setUserRating(Integer userRating) {
         this.userRating = userRating;
     }
