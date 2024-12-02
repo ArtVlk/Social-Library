@@ -67,7 +67,7 @@ public class BookFormPresenter extends VerticalLayout {
             bookRepository.save(book);
 
             clearForm();
-            Notification.show("Книга добавлена!");
+            Notification.show("Книга добавлена! Перезагрузите страницу.");
         } else {
             Notification.show("Заполните все поля.");
         }

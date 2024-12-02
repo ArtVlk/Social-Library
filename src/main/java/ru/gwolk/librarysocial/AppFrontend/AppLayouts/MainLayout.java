@@ -68,7 +68,7 @@ public class MainLayout extends AppLayout {
         nav.addItem(new SideNavItem("Книги", BooksListPresenter.class,
                 VaadinIcon.BOOK.create()));
         nav.addItem(new SideNavItem("Мои книги", UserBooksListPresenter.class,
-                VaadinIcon.SHIELD.create()));
+                VaadinIcon.FOLDER.create()));
 
         return nav;
     }

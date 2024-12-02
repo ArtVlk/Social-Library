@@ -3,6 +3,7 @@ package ru.gwolk.librarysocial.AppFrontend.Presenters;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -13,6 +14,7 @@ import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.gwolk.librarysocial.AppBackend.CRUDRepositories.BookRepository;
 import ru.gwolk.librarysocial.AppBackend.CommonServices.BookService;
+import ru.gwolk.librarysocial.AppBackend.CommonServices.PagesNavigator;
 import ru.gwolk.librarysocial.AppBackend.Entities.Book;
 import ru.gwolk.librarysocial.AppBackend.Entities.Role;
 import ru.gwolk.librarysocial.AppBackend.Entities.User;
@@ -28,11 +30,13 @@ import java.util.Collection;
 @PageTitle("Книги")
 @PermitAll
 public class BooksListPresenter extends VerticalLayout {
+    private final String LOCAL_BOOKS_PAGE = "user-local-books";
     private final BookRepository bookRepository;
     private final CurrentUserService currentUserService;
     private final TextField filter = new TextField("", "Нажмите на фильтр");
     private final Grid<Book> grid;
     private final Button addBookButton = new Button("Добавить книгу");
+    private final Button localBooksButton = new Button("Мои книги", VaadinIcon.FOLDER.create());
     private final BookDetailPresenter bookDetailPresenter;
     private final BookFormPresenter bookFormPresenter;
     private final BookEditorPresenter bookEditorPresenter;
@@ -53,7 +57,7 @@ public class BooksListPresenter extends VerticalLayout {
         grid = new Grid<>(Book.class);
         setBooksGrid(grid);
 
-        add(new HorizontalLayout(filter), grid, addBookButton, bookDetailPresenter, bookFormPresenter, bookEditorPresenter);
+        add(new HorizontalLayout(filter, localBooksButton), grid, addBookButton, bookDetailPresenter, bookFormPresenter, bookEditorPresenter);
 
         filter.setValueChangeMode(ValueChangeMode.EAGER);
         filter.addValueChangeListener(e -> showBook(e.getValue()));
@@ -85,6 +89,7 @@ public class BooksListPresenter extends VerticalLayout {
 
         bookService.updateGrid(grid);
 
+        localBooksButton.addClickListener(e -> PagesNavigator.navigateTo(LOCAL_BOOKS_PAGE));
         addBookButton.addClickListener(e -> openBookForm());
 
     }

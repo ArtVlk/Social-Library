@@ -118,14 +118,14 @@ public class BookEditorPresenter extends VerticalLayout {
 
         bookRepository.save(currentBook);
 
-        Notification.show("Книга успешно сохранена!");
+        Notification.show("Книга успешно сохранена! Перезагрузите страницу.");
         setVisible(false);
     }
 
     private void deleteBook() {
         if (currentBook != null) {
             bookService.deleteBook(currentBook.getId());
-            Notification.show("Книга успешно удалена!");
+            Notification.show("Книга успешно удалена! Перезагрузите страницу.");
             setVisible(false);
         } else {
             Notification.show("Не выбрана книга для удаления");

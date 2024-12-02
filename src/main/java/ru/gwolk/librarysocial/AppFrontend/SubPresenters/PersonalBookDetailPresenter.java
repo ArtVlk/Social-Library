@@ -117,7 +117,7 @@ public class PersonalBookDetailPresenter extends VerticalLayout {
             userBookRepository.save(userBook);
             bookRepository.save(currentBook);
 
-            Notification.show("Оценка сохранена!");
+            Notification.show("Оценка сохранена! Перезагрузите страницу.");
         } else {
             Notification.show("Книга не найдена в вашей библиотеке.");
         }
@@ -141,7 +141,7 @@ public class PersonalBookDetailPresenter extends VerticalLayout {
             UserBook userBook = userBookOptional.get();
             userBook.setReview(userReviewField.getValue());
             userBookRepository.save(userBook);
-            Notification.show("Отзыв сохранен!");
+            Notification.show("Отзыв сохранен! Перезагрузите страницу.");
         } else {
             Notification.show("Отзыв не удалось сохранить, так как книга не найдена в библиотеке пользователя.");
         }
@@ -166,7 +166,7 @@ public class PersonalBookDetailPresenter extends VerticalLayout {
             userBookRepository.delete(userBook);
             //userBook.
 
-            Notification.show("Книга удалена из вашей библиотеки.");
+            Notification.show("Книга удалена из вашей библиотеки. Перезагрузите страницу.");
         } else {
             Notification.show("Книга не найдена в вашей библиотеке.");
         }

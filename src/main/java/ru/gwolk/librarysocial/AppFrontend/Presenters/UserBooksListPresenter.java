@@ -18,7 +18,7 @@ import ru.gwolk.librarysocial.AppBackend.SocialServices.CurrentUserService;
 
 import java.util.Collection;
 
-@Route(value = "user-books", layout = MainLayout.class)
+@Route(value = "user-local-books", layout = MainLayout.class)
 @PageTitle("Мои книги")
 @PermitAll
 public class UserBooksListPresenter extends VerticalLayout {

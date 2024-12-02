@@ -84,7 +84,7 @@ public class BookDetailPresenter extends VerticalLayout {
         userBook.setUserRating(currentBook.getStars());
 
         userBookRepository.save(userBook);
-        Notification.show("Книга добавлена в вашу библиотеку.");
+        Notification.show("Книга добавлена в вашу библиотеку! Перезагрузите страницу.");
     }
 
     public void editBook(Book book) {
@@ -117,7 +117,7 @@ public class BookDetailPresenter extends VerticalLayout {
         updateBookRating(newStars);
         bookRepository.save(currentBook);
 
-        Notification.show("Оценка сохранена!");
+        Notification.show("Оценка сохранена! Перезагрузите страницу.");
 
 
     }
@@ -181,9 +181,5 @@ public class BookDetailPresenter extends VerticalLayout {
         if (currentBook.getEstimationCount() > 0) {
             currentBook.setStars(currentBook.getSumStars() / currentBook.getEstimationCount());
         }
-    }
-
-    private void editCurrentBook() {
-        Notification.show("Редактирование книги...");
     }
 }
