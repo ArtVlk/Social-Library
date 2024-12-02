@@ -19,8 +19,10 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Set<PhoneNumber> phoneNumbers = new HashSet<>();
+    /*@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<PhoneNumber> phoneNumbers = new HashSet<>();*/
+    @OneToOne(mappedBy = "user", cascade = CascadeType.PERSIST)
+    private PhoneNumber phoneNumber;
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "country_id")
     private Country country;
@@ -30,13 +32,6 @@ public class User {
     private Address address;
     private String password;
     private Role role;
-    /*@ManyToMany
-    @JoinTable(
-            name = "subcriptions",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "subscription_user_id")
-    )
-    private Set<User> subscriptions = new HashSet<>();*/
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_books",
@@ -48,9 +43,7 @@ public class User {
     public User(String name, String password, String phoneNumber, String country, String gender, String address) {
         this.name = name;
         this.password = password;
-        this.phoneNumbers = new HashSet<>();
-        PhoneNumber pN = new PhoneNumber(phoneNumber);
-        phoneNumbers.add(pN);
+        this.phoneNumber = new PhoneNumber(phoneNumber);
 
         String[] countryAttributes = new String[3];
         String[] countryAttrFromReg = country.split(" ");
@@ -109,13 +102,20 @@ public class User {
         this.name = name;
     }
 
-    public Set<PhoneNumber> getPhoneNumbers() {
+    public PhoneNumber getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(PhoneNumber phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+    /*public Set<PhoneNumber> getPhoneNumbers() {
         return phoneNumbers;
     }
 
     public void setPhoneNumbers(Set<PhoneNumber> phoneNumbers) {
         this.phoneNumbers = phoneNumbers;
-    }
+    }*/
 
     public Country getCountry() {
         return country;
@@ -139,5 +139,8 @@ public class User {
 
     public void setAddress(Address address) {
         this.address = address;
+    }
+    public String getStringPhoneNumber() {
+        return phoneNumber.getNumber();
     }
 }

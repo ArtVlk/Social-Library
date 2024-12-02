@@ -25,6 +25,7 @@ public class UserEditorPresenter extends VerticalLayout implements KeyNotifier {
     private User editingUser;
     private TextField name = new TextField("Имя");
     private Button subscribeButton = new Button("Подписаться", VaadinIcon.PLUS.create());
+    private TextField number = new TextField("Номер телефона");
     private TextField gender = new TextField("Пол");
     private Button lookFavouritesButton = new Button("Посмотреть избранное", VaadinIcon.BOOK.create());
     private Button banUserButton = new Button("Забанить", VaadinIcon.BAN.create());
@@ -40,10 +41,12 @@ public class UserEditorPresenter extends VerticalLayout implements KeyNotifier {
         this.userRepository = userRepository;
 
         name.setReadOnly(true);
+        number.setReadOnly(true);
         gender.setReadOnly(true);
         banUserButton.addClassNames(LumoUtility.FontSize.LARGE, LumoUtility.TextColor.ERROR);
 
-        setHorizontalComponentAlignment(Alignment.CENTER, name, gender, subscribeButton, lookFavouritesButton, banUserButton);
+        setHorizontalComponentAlignment(Alignment.CENTER, name, number, gender, subscribeButton, lookFavouritesButton,
+                banUserButton);
 
         addComponentsByRoles(authenticationContext);
 
@@ -58,10 +61,10 @@ public class UserEditorPresenter extends VerticalLayout implements KeyNotifier {
 
     private void addComponentsByRoles(AuthenticationContext authenticationContext) {
         if (authenticationContext.hasRole(StringRoles.ADMIN)) {
-            add(name, gender, subscribeButton, lookFavouritesButton, banUserButton);
+            add(name, number, gender, subscribeButton, lookFavouritesButton, banUserButton);
         }
         else {
-            add(name, gender, subscribeButton, lookFavouritesButton);
+            add(name, number, gender, subscribeButton, lookFavouritesButton);
         }
     }
 
@@ -78,6 +81,8 @@ public class UserEditorPresenter extends VerticalLayout implements KeyNotifier {
         else {
             this.editingUser = newUser;
         }
+
+        number.setValue(editingUser.getPhoneNumber() == null ? "" : editingUser.getPhoneNumber().getNumber());
 
         binder.setBean(editingUser);
         setVisible(true);

@@ -6,8 +6,9 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
+import ru.gwolk.librarysocial.AppBackend.CRUDRepositories.PhoneNumberRepository;
 import ru.gwolk.librarysocial.AppBackend.CommonServices.MyUserDetailsService;
-import ru.gwolk.librarysocial.AppBackend.CommonServices.RegistrationForm;
+import ru.gwolk.librarysocial.AppFrontend.AppLayouts.RegistrationForm;
 import ru.gwolk.librarysocial.AppBackend.CommonServices.RegistrationFormBinder;
 
 @Route("registration")

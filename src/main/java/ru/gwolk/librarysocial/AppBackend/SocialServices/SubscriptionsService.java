@@ -1,5 +1,6 @@
 package ru.gwolk.librarysocial.AppBackend.SocialServices;
 
+import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.spring.annotation.UIScope;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,11 +50,11 @@ public class SubscriptionsService {
         subscriptionsGrid.setWidth("900px");
         subscriptionsGrid.setColumns();
 
-        subscriptionsGrid.addColumn(User::getName).setHeader("Имя").setWidth("540px");
-        subscriptionsGrid.addColumn(User::getGender).setHeader("Пол").setWidth("90px");
-        subscriptionsGrid.addColumn(user -> user.getPhoneNumbers().stream()
-                .map(PhoneNumber::getNumber)
-                .collect(Collectors.joining(", "))).setHeader("Номера телефонов").setWidth("270px");
+        subscriptionsGrid.addColumn(User::getName).setHeader("Имя").setWidth("540px")
+                .setTextAlign(ColumnTextAlign.CENTER);;
+        subscriptionsGrid.addColumn(User::getGender).setHeader("Пол").setWidth("90px")
+                .setTextAlign(ColumnTextAlign.CENTER);;
+        //subscriptionsGrid.addColumn(User::getPhoneNumber).setHeader("Номер телефона").setWidth("270px");
     }
 
     public Grid<UserBook> createFavouriteBooks() {
@@ -62,10 +63,14 @@ public class SubscriptionsService {
         favouriteBooks.setWidth("900px");
         favouriteBooks.setColumns();
 
-        favouriteBooks.addColumn(userBook -> userBook.getBook().getName()).setHeader("Название").setWidth("225px");
-        favouriteBooks.addColumn(userBook -> userBook.getBook().getAuthor().getName()).setHeader("Автор").setWidth("225px");
-        favouriteBooks.addColumn(userBook -> userBook.getBook().getGenre().getName()).setHeader("Жанр").setWidth("225px");
-        favouriteBooks.addColumn(UserBook::getUserRating).setHeader("Оценка").setWidth("225px");
+        favouriteBooks.addColumn(userBook -> userBook.getBook().getName()).setHeader("Название")
+                .setWidth("225px").setTextAlign(ColumnTextAlign.CENTER);;
+        favouriteBooks.addColumn(userBook -> userBook.getBook().getAuthor().getName()).setHeader("Автор")
+                .setWidth("225px").setTextAlign(ColumnTextAlign.CENTER);;
+        favouriteBooks.addColumn(userBook -> userBook.getBook().getGenre().getName()).setHeader("Жанр")
+                .setWidth("225px").setTextAlign(ColumnTextAlign.CENTER);;
+        favouriteBooks.addColumn(UserBook::getUserRating).setHeader("Оценка")
+                .setWidth("225px").setTextAlign(ColumnTextAlign.CENTER);;
 
         favouriteBooks.getElement().getStyle().set("margin-left", "auto");
         favouriteBooks.getElement().getStyle().set("margin-right", "auto");

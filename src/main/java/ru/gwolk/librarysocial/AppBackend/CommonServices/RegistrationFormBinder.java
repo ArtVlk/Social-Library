@@ -7,8 +7,10 @@ import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.data.binder.ValidationResult;
 import com.vaadin.flow.data.binder.ValueContext;
+import ru.gwolk.librarysocial.AppBackend.CRUDRepositories.PhoneNumberRepository;
 import ru.gwolk.librarysocial.AppBackend.Entities.User;
 import ru.gwolk.librarysocial.AppBackend.Entities.UserFromRegistration;
+import ru.gwolk.librarysocial.AppFrontend.AppLayouts.RegistrationForm;
 
 public class RegistrationFormBinder {
     private final RegistrationForm registrationForm;
@@ -16,7 +18,8 @@ public class RegistrationFormBinder {
     private final MyUserDetailsService userDetailsService;
     private boolean enablePasswordValidation;
 
-    public RegistrationFormBinder(RegistrationForm registrationForm, MyUserDetailsService userDetailsService) {
+    public RegistrationFormBinder(RegistrationForm registrationForm,
+                                  MyUserDetailsService userDetailsService) {
         this.registrationForm = registrationForm;
         this.userDetailsService = userDetailsService;
     }
@@ -42,7 +45,7 @@ public class RegistrationFormBinder {
 
                 binder.writeBean(userBean);
 
-                boolean isSaved = saveUserToDB(userBean, userDetailsService);
+                boolean isSaved = saveUserAndPhoneNumberToDB(userBean, userDetailsService);
                 if (!isSaved)
                     Notification.show("Пользователь с таким именем уже существует!");
                 else
@@ -52,7 +55,7 @@ public class RegistrationFormBinder {
         });
     }
 
-    private boolean saveUserToDB(UserFromRegistration userBean, MyUserDetailsService userDetailsService) {
+    private boolean saveUserAndPhoneNumberToDB(UserFromRegistration userBean, MyUserDetailsService userDetailsService) {
         User userToDb = convertRegistrationUserToUser(userBean);
         return userDetailsService.addUser(userToDb);
     }
@@ -80,7 +83,7 @@ public class RegistrationFormBinder {
 
         String pass2 = registrationForm.getPasswordConfirmField().getValue();
 
-        if (pass1 != null && pass1.equals(pass2)) {
+        if (pass1.equals(pass2)) {
             return ValidationResult.ok();
         }
 

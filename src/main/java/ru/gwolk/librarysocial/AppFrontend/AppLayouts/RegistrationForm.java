@@ -1,4 +1,4 @@
-package ru.gwolk.librarysocial.AppBackend.CommonServices;
+package ru.gwolk.librarysocial.AppFrontend.AppLayouts;
 
 import com.vaadin.flow.component.HasValueAndElement;
 import com.vaadin.flow.component.button.Button;

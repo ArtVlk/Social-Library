@@ -1,5 +1,6 @@
 package ru.gwolk.librarysocial.AppBackend.SocialServices;
 
+import com.vaadin.flow.component.grid.ColumnTextAlign;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
@@ -51,11 +52,10 @@ public class UserEditorService {
         usersGrid.setWidth("900px");
         usersGrid.setColumns();
 
-        usersGrid.addColumn(User::getName).setHeader("Имя").setWidth("540px");
-        usersGrid.addColumn(User::getGender).setHeader("Пол").setWidth("90px");
-        usersGrid.addColumn(user -> user.getPhoneNumbers().stream()
-                .map(PhoneNumber::getNumber)
-                .collect(Collectors.joining(", "))).setHeader("Номер телефона").setWidth("270px");
+        usersGrid.addColumn(User::getName).setHeader("Имя").setWidth("80%").setTextAlign(ColumnTextAlign.CENTER);
+        usersGrid.addColumn(User::getGender).setHeader("Пол").setWidth("20%").setTextAlign(ColumnTextAlign.CENTER);
+        //usersGrid.addColumn(User::getStringPhoneNumber).setHeader("Номер телефона").setWidth("270px");
+
 
         usersGrid.getElement().getStyle().set("margin-left", "auto");
         usersGrid.getElement().getStyle().set("margin-right", "auto");
