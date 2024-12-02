@@ -1,7 +1,9 @@
 package ru.gwolk.librarysocial.AppFrontend.Presenters;
 
 
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -28,6 +30,9 @@ public class UserBooksListPresenter extends VerticalLayout {
     private final PersonalBookDetailPresenter personalBookDetailPresenter;
     private final Grid<UserBook> grid;
 
+    private final Button sortButton = new Button("Сортировать по", VaadinIcon.SORT.create());
+    private int sortState = 0; // 0 - по названию, 1 - по автору, 2 - по жанру
+
     @Autowired
     public UserBooksListPresenter(UserBookRepository userBookRepository, CurrentUserService currentUserService,
                                   PersonalBookDetailPresenter personalBookDetailPresenter) {
@@ -38,7 +43,7 @@ public class UserBooksListPresenter extends VerticalLayout {
         grid = new Grid<>(UserBook.class);
         setUserBooksGrid(grid);
 
-        add(new HorizontalLayout(filter), grid, personalBookDetailPresenter);
+        add(new HorizontalLayout(filter, sortButton), grid, personalBookDetailPresenter);
 
         filter.setValueChangeMode(ValueChangeMode.EAGER);
         filter.addValueChangeListener(e -> showBook(e.getValue()));
@@ -55,6 +60,7 @@ public class UserBooksListPresenter extends VerticalLayout {
         });
 
         loadUserBooks();
+        sortButton.addClickListener(e -> sortGrid());
     }
 
 
@@ -84,5 +90,31 @@ public class UserBooksListPresenter extends VerticalLayout {
             Collection<UserBook> filteredBooks = userBookRepository.findByUserAndBookNameContaining(currentUserService.getCurrentUser(), filterText);
             grid.setItems(filteredBooks);
         }
+    }
+
+    private void sortGrid() {
+        Collection<UserBook> sortedBooks;
+        switch (sortState) {
+            case 0:
+                sortedBooks = userBookRepository.findByUserOrderByBook_NameAsc(currentUserService.getCurrentUser());
+                sortButton.setText("Сортировать по: Название");
+                break;
+            case 1:
+                sortedBooks = userBookRepository.findByUserOrderByBook_Author_NameAsc(currentUserService.getCurrentUser());
+                sortButton.setText("Сортировать по: Автор");
+                break;
+            case 2:
+                sortedBooks = userBookRepository.findByUserOrderByBook_Genre_NameAsc(currentUserService.getCurrentUser());
+                sortButton.setText("Сортировать по: Жанр");
+                break;
+            case 3:
+                sortedBooks = userBookRepository.findByUserOrderByUserRatingDesc(currentUserService.getCurrentUser());
+                sortButton.setText("Сортировать по: Оценка");
+                break;
+            default:
+                sortedBooks = userBookRepository.findByUser(currentUserService.getCurrentUser());
+        }
+        grid.setItems(sortedBooks);
+        sortState = (sortState + 1) % 4;
     }
 }

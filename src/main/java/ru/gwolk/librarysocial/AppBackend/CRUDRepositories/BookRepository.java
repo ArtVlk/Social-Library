@@ -21,4 +21,9 @@ public interface BookRepository extends CrudRepository<Book, Long>{
 
     List<Book> findByNameContaining(String namePart);
 
+    // Методы для сортировки
+    List<Book> findAllByOrderByNameAsc();
+    List<Book> findAllByOrderByAuthor_NameAsc();
+    List<Book> findAllByOrderByGenre_NameAsc();
+    List<Book> findAllByOrderByStarsDesc();
 }

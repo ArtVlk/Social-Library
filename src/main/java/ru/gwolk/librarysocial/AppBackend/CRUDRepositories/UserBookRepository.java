@@ -16,4 +16,9 @@ public interface UserBookRepository extends CrudRepository<UserBook, Long> {
     Collection<UserBook> findByUserAndBookNameContaining(User user, String name);
     List<UserBook> findByUser(User user);
     void deleteByBookId(Long bookId);
+
+    Collection<UserBook> findByUserOrderByBook_NameAsc(User user);
+    Collection<UserBook> findByUserOrderByBook_Author_NameAsc(User user);
+    Collection<UserBook> findByUserOrderByBook_Genre_NameAsc(User user);
+    Collection<UserBook> findByUserOrderByUserRatingDesc(User user);
 }
