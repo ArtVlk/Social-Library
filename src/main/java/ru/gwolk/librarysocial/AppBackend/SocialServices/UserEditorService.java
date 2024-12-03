@@ -10,6 +10,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import ru.gwolk.librarysocial.AppBackend.CRUDRepositories.UserRepository;
+import ru.gwolk.librarysocial.AppBackend.CommonServices.CustomNotification;
 import ru.gwolk.librarysocial.AppBackend.Entities.PhoneNumber;
 import ru.gwolk.librarysocial.AppBackend.Entities.User;
 import ru.gwolk.librarysocial.AppBackend.Entities.UserBook;
@@ -54,8 +55,6 @@ public class UserEditorService {
 
         usersGrid.addColumn(User::getName).setHeader("Имя").setWidth("80%").setTextAlign(ColumnTextAlign.CENTER);
         usersGrid.addColumn(User::getGender).setHeader("Пол").setWidth("20%").setTextAlign(ColumnTextAlign.CENTER);
-        //usersGrid.addColumn(User::getStringPhoneNumber).setHeader("Номер телефона").setWidth("270px");
-
 
         usersGrid.getElement().getStyle().set("margin-left", "auto");
         usersGrid.getElement().getStyle().set("margin-right", "auto");
@@ -79,12 +78,11 @@ public class UserEditorService {
         if (findingSubscription == null) {
             Subscription subscription = new Subscription(me, user);
             subscriptionsRepository.save(subscription);
-            notificationOk = Notification.show("✓");
-            notificationOk.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+            CustomNotification.showNotification("✓", NotificationVariant.LUMO_SUCCESS);
         }
         else {
-            notificationWarning = Notification.show("Вы уже подписаны на этого пользователя");
-            notificationWarning.addThemeVariants(NotificationVariant.LUMO_WARNING);
+            CustomNotification.showNotification("Вы уже подписаны на этого пользователя",
+                    NotificationVariant.LUMO_WARNING);
         }
     }
 
@@ -103,8 +101,7 @@ public class UserEditorService {
         userRepository.delete(editingUser);
         usersGrid.setItems((Collection<User>) userRepository.findAll());
 
-        notificationBan = Notification.show("Забанен!");
-        notificationBan.addThemeVariants(NotificationVariant.LUMO_ERROR);
+        CustomNotification.showNotification("Забанен!", NotificationVariant.LUMO_ERROR);
     }
 
 }

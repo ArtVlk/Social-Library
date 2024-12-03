@@ -2,6 +2,7 @@ package ru.gwolk.librarysocial.AppFrontend.SubPresenters;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
@@ -12,6 +13,7 @@ import com.vaadin.flow.spring.annotation.UIScope;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.gwolk.librarysocial.AppBackend.CRUDRepositories.BookRepository;
 import ru.gwolk.librarysocial.AppBackend.CRUDRepositories.UserRepository;
+import ru.gwolk.librarysocial.AppBackend.CommonServices.CustomNotification;
 import ru.gwolk.librarysocial.AppBackend.Entities.Book;
 import ru.gwolk.librarysocial.AppBackend.Entities.User;
 import ru.gwolk.librarysocial.AppBackend.Entities.UserBook;
@@ -74,7 +76,8 @@ public class BookDetailPresenter extends VerticalLayout {
     private void addBookToUserLibrary(User currentUser) {
 
         if (userBookRepository.findByUserAndBook(currentUser, currentBook).isPresent()) {
-            Notification.show("Эта книга уже в вашей библиотеке.");
+            CustomNotification.showNotification("Эта книга уже в вашей библиотеке",
+                    NotificationVariant.LUMO_ERROR);
             return;
         }
 
@@ -84,7 +87,8 @@ public class BookDetailPresenter extends VerticalLayout {
         userBook.setUserRating(currentBook.getStars());
 
         userBookRepository.save(userBook);
-        Notification.show("Книга добавлена в вашу библиотеку! Перезагрузите страницу.");
+        CustomNotification.showNotification("Книга добавлена в вашу библиотеку! Перезагрузите страницу",
+                NotificationVariant.LUMO_SUCCESS);
     }
 
     public void editBook(Book book) {
@@ -96,7 +100,7 @@ public class BookDetailPresenter extends VerticalLayout {
         setVisible(true);
 
         authorField.setValue(book.getAuthor().getName() + ": " + book.getName());
-        descriptionField.setValue(book.getDescription() != null ? book.getDescription() : "Описание отсутствует.");
+        descriptionField.setValue(book.getDescription() != null ? book.getDescription() : "Описание отсутствует");
         ratingField.setValue(book.getStars() != null ? String.valueOf(book.getStars()) : "Нет рейтинга");
     }
 
@@ -117,8 +121,8 @@ public class BookDetailPresenter extends VerticalLayout {
         updateBookRating(newStars);
         bookRepository.save(currentBook);
 
-        Notification.show("Оценка сохранена! Перезагрузите страницу.");
-
+        CustomNotification.showNotification("Оценка сохранена! Перезагрузите страницу",
+                NotificationVariant.LUMO_SUCCESS);
 
     }
 
@@ -137,17 +141,19 @@ public class BookDetailPresenter extends VerticalLayout {
         }
 
         if (currentUserService.getCurrentUser() == null) {
-            Notification.show("Ошибка: пользователь не найден");
+            CustomNotification.showNotification("Ошибка: пользователь не найден",
+                    NotificationVariant.LUMO_ERROR);
             return false;
         }
 
         if (newRatingField.getValue() == null) {
-            Notification.show("Пожалуйста, введите оценку");
+            CustomNotification.showNotification("Пожалуйста, введите оценку", NotificationVariant.LUMO_WARNING);
             return false;
         }
 
         int newStars = newRatingField.getValue().intValue();
         if (newStars < 1 || newStars > 5) {
+            CustomNotification.showNotification("Оценка должна быть от 1 до 5", NotificationVariant.LUMO_ERROR);
             Notification.show("Оценка должна быть от 1 до 5");
             return false;
         }

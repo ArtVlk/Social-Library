@@ -37,9 +37,14 @@ public class SubscriptionsService {
         createAndSetSubsciptionsGrid();
     }
 
-    public void unsubscribe(User subscibedUser) {
+    public void unsubscribe(User subscribedUser) {
         me = getUser();
-        Subscription subscription = subscriptionsRepository.findSubscriptionByUserAndSubscribedUser(me, subscibedUser);
+        Subscription subscription = subscriptionsRepository.findSubscriptionByUserAndSubscribedUser(me, subscribedUser);
+
+        if (subscription == null) {
+            throw new IllegalArgumentException("Подписка не найдена");
+        }
+
         subscriptionsRepository.delete(subscription);
         subscriptionsGrid.setItems(subscriptionsRepository.findAllSubscribedUsers());
     }
