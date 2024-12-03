@@ -71,18 +71,17 @@ public class UserEditorService {
         return me;
     }
 
-    public void subscribe(User user) {
+    public boolean subscribe(User user) {
         me = getUser();
         Subscription findingSubscription = subscriptionsRepository.findSubscriptionByUserAndSubscribedUser(me, user);
 
         if (findingSubscription == null) {
             Subscription subscription = new Subscription(me, user);
             subscriptionsRepository.save(subscription);
-            CustomNotification.showNotification("✓", NotificationVariant.LUMO_SUCCESS);
+            return true;
         }
         else {
-            CustomNotification.showNotification("Вы уже подписаны на этого пользователя",
-                    NotificationVariant.LUMO_WARNING);
+            return false;
         }
     }
 
@@ -100,8 +99,6 @@ public class UserEditorService {
 
         userRepository.delete(editingUser);
         usersGrid.setItems((Collection<User>) userRepository.findAll());
-
-        CustomNotification.showNotification("Забанен! \uD83D\uDE08", NotificationVariant.LUMO_ERROR);
     }
 
 }

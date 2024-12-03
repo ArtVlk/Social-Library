@@ -70,7 +70,9 @@ public class SubscriptionUserEditorPresenter extends VerticalLayout {
                 review, userRating);
         add(name, lookFavouritesButton, unsubscibeButton, favouriteBooks, review, userRating);
 
-        unsubscibeButton.addClickListener(e -> subscriptionsService.unsubscribe(subscribedUser));
+        unsubscibeButton.addClickListener(e -> {
+            subscriptionsService.unsubscribe(subscribedUser);
+        });
         lookFavouritesButton.addClickListener(e -> subscriptionsService.fillAndShowFavouriteBooks(subscribedUser));
 
         favouriteBooks.asSingleSelect().addValueChangeListener(e -> editUserBook(e.getValue()));

@@ -44,8 +44,6 @@ public class UserEditorServiceTest {
     public void setUp() {
         currentUser = new User("Robert", "Password", Role.USER);
         userToSubscribe = new User("Vantuz", "imAGangsta", Role.USER);
-
-        //PowerMockito.mockStatic(CustomNotification.class);
         MockitoAnnotations.openMocks(this);
     }
 
@@ -58,7 +56,6 @@ public class UserEditorServiceTest {
         userEditorService.subscribe(userToSubscribe);
 
         verify(subscriptionsRepository, times(1)).save(any(Subscription.class));
-        //PowerMockito.verifyStatic(CustomNotification.class, times(1));
     }
 
     @Test

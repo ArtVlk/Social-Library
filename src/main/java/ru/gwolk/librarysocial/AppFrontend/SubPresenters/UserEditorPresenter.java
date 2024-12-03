@@ -3,6 +3,7 @@ package ru.gwolk.librarysocial.AppFrontend.SubPresenters;
 import com.vaadin.flow.component.KeyNotifier;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import ru.gwolk.librarysocial.AppBackend.CRUDRepositories.UserRepository;
+import ru.gwolk.librarysocial.AppBackend.CommonServices.CustomNotification;
 import ru.gwolk.librarysocial.AppBackend.Entities.StringRoles;
 import ru.gwolk.librarysocial.AppBackend.Entities.User;
 import ru.gwolk.librarysocial.AppBackend.SocialServices.UserEditorService;
@@ -54,8 +56,19 @@ public class UserEditorPresenter extends VerticalLayout implements KeyNotifier {
 
         setSpacing(true);
 
-        subscribeButton.addClickListener(e -> userEditorService.subscribe(editingUser));
-        banUserButton.addClickListener(e -> userEditorService.ban(editingUser));
+        subscribeButton.addClickListener(e -> {
+            if (userEditorService.subscribe(editingUser)) {
+                CustomNotification.showNotification("✓", NotificationVariant.LUMO_SUCCESS);
+            }
+            else {
+                CustomNotification.showNotification("Вы уже подписаны на этого пользователя",
+                        NotificationVariant.LUMO_WARNING);
+            }
+        });
+        banUserButton.addClickListener(e -> {
+            userEditorService.ban(editingUser);
+            CustomNotification.showNotification("Забанен! \uD83D\uDE08", NotificationVariant.LUMO_ERROR);
+        });
         setVisible(false);
     }
 

@@ -59,7 +59,6 @@ public class SubscriptionsService {
                 .setTextAlign(ColumnTextAlign.CENTER);;
         subscriptionsGrid.addColumn(User::getGender).setHeader("Пол").setWidth("90px")
                 .setTextAlign(ColumnTextAlign.CENTER);;
-        //subscriptionsGrid.addColumn(User::getPhoneNumber).setHeader("Номер телефона").setWidth("270px");
     }
 
     public Grid<UserBook> createFavouriteBooks() {
