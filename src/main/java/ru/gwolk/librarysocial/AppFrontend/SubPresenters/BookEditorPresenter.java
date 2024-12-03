@@ -13,7 +13,7 @@ import ru.gwolk.librarysocial.AppBackend.CRUDRepositories.AuthorRepository;
 import ru.gwolk.librarysocial.AppBackend.CRUDRepositories.BookRepository;
 import ru.gwolk.librarysocial.AppBackend.CRUDRepositories.GenreRepository;
 import ru.gwolk.librarysocial.AppBackend.CRUDRepositories.UserBookRepository;
-import ru.gwolk.librarysocial.AppBackend.CommonServices.BookService;
+import ru.gwolk.librarysocial.AppBackend.LibraryServices.BookService;
 import ru.gwolk.librarysocial.AppBackend.Entities.Author;
 import ru.gwolk.librarysocial.AppBackend.Entities.Book;
 import ru.gwolk.librarysocial.AppBackend.Entities.Genre;
@@ -91,9 +91,22 @@ public class BookEditorPresenter extends VerticalLayout {
     private void saveBook() {
         if (currentBook == null) return;
 
+        updateBookDetails();
+        handleAuthor();
+        handleGenre();
+
+        bookRepository.save(currentBook);
+
+        Notification.show("Книга успешно сохранена! Перезагрузите страницу.");
+        setVisible(false);
+    }
+
+    private void updateBookDetails() {
         currentBook.setName(nameField.getValue());
         currentBook.setDescription(descriptionField.getValue());
+    }
 
+    private void handleAuthor() {
         String authorName = authorField.getValue().trim();
         if (!authorName.isEmpty()) {
             Author author = authorRepository.findByName(authorName)
@@ -104,7 +117,9 @@ public class BookEditorPresenter extends VerticalLayout {
                     });
             currentBook.setAuthor(author);
         }
+    }
 
+    private void handleGenre() {
         String genreName = genreField.getValue().trim();
         if (!genreName.isEmpty()) {
             Genre genre = genreRepository.findByName(genreName)
@@ -115,11 +130,6 @@ public class BookEditorPresenter extends VerticalLayout {
                     });
             currentBook.setGenre(genre);
         }
-
-        bookRepository.save(currentBook);
-
-        Notification.show("Книга успешно сохранена! Перезагрузите страницу.");
-        setVisible(false);
     }
 
     private void deleteBook() {

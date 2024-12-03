@@ -44,7 +44,6 @@ public class PersonalBookDetailPresenter extends VerticalLayout {
 
         userReviewField.setWidth("80%");
         userReviewField.setHeight("200px");
-
         authorField.setWidth("80%");
 
         HorizontalLayout actionsLayout = new HorizontalLayout(deleteFromUserLibraryButton, cancelButton);
@@ -76,50 +75,52 @@ public class PersonalBookDetailPresenter extends VerticalLayout {
             return;
         }
 
-        int newRating;
-        try {
-            newRating = Integer.parseInt(ratingField.getValue());
-            if (newRating < 1 || newRating > 5) {
-                Notification.show("Оценка должна быть в диапазоне от 1 до 5");
-                return;
-            }
-        } catch (NumberFormatException e) {
-            Notification.show("Ошибка: некорректный формат оценки");
-            return;
-        }
-
-        if (currentBook.getSumStars() == null) {
-            currentBook.setSumStars(currentBook.getStars());
-        }
-        if (currentBook.getEstimationCount() == null) {
-            currentBook.setEstimationCount(1);
+        int newRating = parseRating();
+        if (newRating == -1) {
+            return; // Ошибка уже обработана внутри parseRating
         }
 
         Optional<UserBook> userBookOptional = userBookRepository.findByUserAndBook(currentUser, currentBook);
         if (userBookOptional.isPresent()) {
             UserBook userBook = userBookOptional.get();
-
-            if (userBook.getUserRating() != null) {
-                currentBook.setSumStars(currentBook.getSumStars() - userBook.getUserRating());
-            } else {
-                currentBook.setEstimationCount(currentBook.getEstimationCount() + 1);
-            }
-
-            userBook.setUserRating(newRating);
-            currentBook.setSumStars(currentBook.getSumStars() + newRating);
-
-            if (currentBook.getEstimationCount() > 0) {
-                currentBook.setStars(currentBook.getSumStars() / currentBook.getEstimationCount());
-            } else {
-                currentBook.setStars(0);
-            }
-
+            updateBookRating(userBook, newRating);
             userBookRepository.save(userBook);
             bookRepository.save(currentBook);
-
             Notification.show("Оценка сохранена! Перезагрузите страницу.");
         } else {
             Notification.show("Книга не найдена в вашей библиотеке.");
+        }
+    }
+
+    private int parseRating() {
+        int newRating;
+        try {
+            newRating = Integer.parseInt(ratingField.getValue());
+            if (newRating < 1 || newRating > 5) {
+                Notification.show("Оценка должна быть в диапазоне от 1 до 5");
+                return -1; // Ошибка в рейтинге
+            }
+        } catch (NumberFormatException e) {
+            Notification.show("Ошибка: некорректный формат оценки");
+            return -1; // Ошибка в формате
+        }
+        return newRating;
+    }
+
+    private void updateBookRating(UserBook userBook, int newRating) {
+        if (userBook.getUserRating() != null) {
+            currentBook.setSumStars(currentBook.getSumStars() - userBook.getUserRating());
+        } else {
+            currentBook.setEstimationCount(currentBook.getEstimationCount() + 1);
+        }
+
+        userBook.setUserRating(newRating);
+        currentBook.setSumStars(currentBook.getSumStars() + newRating);
+
+        if (currentBook.getEstimationCount() > 0) {
+            currentBook.setStars(currentBook.getSumStars() / currentBook.getEstimationCount());
+        } else {
+            currentBook.setStars(0);
         }
     }
 
@@ -139,13 +140,19 @@ public class PersonalBookDetailPresenter extends VerticalLayout {
 
         if (userBookOptional.isPresent()) {
             UserBook userBook = userBookOptional.get();
-            userBook.setReview(userReviewField.getValue());
+            saveReview(userBook);
             userBookRepository.save(userBook);
             Notification.show("Отзыв сохранен! Перезагрузите страницу.");
         } else {
             Notification.show("Отзыв не удалось сохранить, так как книга не найдена в библиотеке пользователя.");
         }
     }
+
+    private void saveReview(UserBook userBook) {
+        userBook.setReview(userReviewField.getValue());
+    }
+
+
 
     private void deleteFromUserLibrary() {
         if (currentBook == null) {
@@ -164,7 +171,6 @@ public class PersonalBookDetailPresenter extends VerticalLayout {
             UserBook userBook = userBookOptional.get();
             removeUserRatingFromBook(userBook);
             userBookRepository.delete(userBook);
-            //userBook.
 
             Notification.show("Книга удалена из вашей библиотеки. Перезагрузите страницу.");
         } else {
@@ -178,14 +184,17 @@ public class PersonalBookDetailPresenter extends VerticalLayout {
             if (currentBook.getSumStars() != null && currentBook.getEstimationCount() != null) {
                 currentBook.setSumStars(currentBook.getSumStars() - ratingToRemove);
                 currentBook.setEstimationCount(currentBook.getEstimationCount() - 1);
-                if (currentBook.getEstimationCount() > 0) {
-                    currentBook.setStars(currentBook.getSumStars() / currentBook.getEstimationCount());
-                } else {
-                    currentBook.setStars(0);
-                }
+                updateBookStars();
             }
         }
-        bookRepository.save(currentBook);
+    }
+
+    private void updateBookStars() {
+        if (currentBook.getEstimationCount() > 0) {
+            currentBook.setStars(currentBook.getSumStars() / currentBook.getEstimationCount());
+        } else {
+            currentBook.setStars(0);
+        }
     }
 
     public void editBook(UserBook userBook) {

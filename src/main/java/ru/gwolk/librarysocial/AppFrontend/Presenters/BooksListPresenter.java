@@ -13,7 +13,7 @@ import com.vaadin.flow.router.Route;
 import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.gwolk.librarysocial.AppBackend.CRUDRepositories.BookRepository;
-import ru.gwolk.librarysocial.AppBackend.CommonServices.BookService;
+import ru.gwolk.librarysocial.AppBackend.LibraryServices.BookService;
 import ru.gwolk.librarysocial.AppBackend.CommonServices.PagesNavigator;
 import ru.gwolk.librarysocial.AppBackend.Entities.Book;
 import ru.gwolk.librarysocial.AppBackend.Entities.Role;
@@ -42,6 +42,9 @@ public class BooksListPresenter extends VerticalLayout {
     private final BookEditorPresenter bookEditorPresenter;
     private final BookService bookService;
 
+    private final Button sortButton = new Button("Сортировать по", VaadinIcon.SORT.create());
+    private int sortState = 0; // 0 - по названию, 1 - по автору, 2 - по жанру, 3 - по оценке
+
 
     @Autowired
     public BooksListPresenter(BookRepository bookRepository, CurrentUserService currentUserService,
@@ -57,17 +60,24 @@ public class BooksListPresenter extends VerticalLayout {
         grid = new Grid<>(Book.class);
         setBooksGrid(grid);
 
-        add(new HorizontalLayout(filter, localBooksButton), grid, addBookButton, bookDetailPresenter, bookFormPresenter, bookEditorPresenter);
+        add(new HorizontalLayout(filter, sortButton, localBooksButton), grid, addBookButton, bookDetailPresenter, bookFormPresenter, bookEditorPresenter);
 
+
+        setupFilter();
+        setupGridSelection();
+        setupSortButton();
+        setupLocalBooksButton();
+        setupAddBookButton();
+        showAddBookButton();
+        showBook("");
+    }
+
+    private void setupFilter() {
         filter.setValueChangeMode(ValueChangeMode.EAGER);
         filter.addValueChangeListener(e -> showBook(e.getValue()));
+    }
 
-        bookDetailPresenter.setVisible(false);
-        bookFormPresenter.setVisible(false);
-        bookEditorPresenter.setVisible(false);
-
-        showAddBookButton();
-
+    private void setupGridSelection() {
         grid.asSingleSelect().addValueChangeListener(event -> {
             if (event.getValue() != null) {
                 if (currentUserService.getCurrentUser().getRole() == Role.ADMIN) {
@@ -85,13 +95,14 @@ public class BooksListPresenter extends VerticalLayout {
                 bookEditorPresenter.setVisible(false);
             }
         });
+    }
 
+    private void setupSortButton() {
+        sortButton.addClickListener(e -> sortGrid());
+    }
 
-        bookService.updateGrid(grid);
-
+    private void setupLocalBooksButton() {
         localBooksButton.addClickListener(e -> PagesNavigator.navigateTo(LOCAL_BOOKS_PAGE));
-        addBookButton.addClickListener(e -> openBookForm());
-
     }
 
     private void showAddBookButton() {
@@ -104,8 +115,9 @@ public class BooksListPresenter extends VerticalLayout {
     }
 
     private void openBookForm() {
-        bookFormPresenter.setVisible(true);
         bookDetailPresenter.setVisible(false);
+        bookEditorPresenter.setVisible(false);
+        bookFormPresenter.setVisible(true);
     }
 
     public void updateGrid() {
@@ -120,6 +132,10 @@ public class BooksListPresenter extends VerticalLayout {
         }
     }
 
+    private void setupAddBookButton() {
+        addBookButton.addClickListener(e -> openBookForm());
+    }
+
     private void setBooksGrid(Grid<Book> grid) {
         grid.setHeight("600px");
         grid.setWidth("1800px");
@@ -132,6 +148,28 @@ public class BooksListPresenter extends VerticalLayout {
 
         grid.getElement().getStyle().set("margin-left", "auto");
         grid.getElement().getStyle().set("margin-right", "auto");
+    }
+
+    private void sortGrid() {
+        switch (sortState) {
+            case 0:
+                grid.setItems(bookRepository.findAllByOrderByNameAsc());
+                sortButton.setText("Сортировать по: Название");
+                break;
+            case 1:
+                grid.setItems(bookRepository.findAllByOrderByAuthor_NameAsc());
+                sortButton.setText("Сортировать по: Автор");
+                break;
+            case 2:
+                grid.setItems(bookRepository.findAllByOrderByGenre_NameAsc());
+                sortButton.setText("Сортировать по: Жанр");
+                break;
+            case 3:
+                grid.setItems(bookRepository.findAllByOrderByStarsDesc());
+                sortButton.setText("Сортировать по: Оценка");
+                break;
+        }
+        sortState = (sortState + 1) % 4; // переключение состояния
     }
 
 }

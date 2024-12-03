@@ -1,4 +1,4 @@
-package ru.gwolk.librarysocial.AppBackend.CommonServices;
+package ru.gwolk.librarysocial.AppBackend.LibraryServices;
 
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.spring.annotation.UIScope;
