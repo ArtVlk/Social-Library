@@ -87,7 +87,7 @@ public class BookDetailPresenter extends VerticalLayout {
         userBook.setUserRating(currentBook.getStars());
 
         userBookRepository.save(userBook);
-        CustomNotification.showNotification("Книга добавлена в вашу библиотеку! Перезагрузите страницу",
+        CustomNotification.showNotification("Книга добавлена в вашу библиотеку!",
                 NotificationVariant.LUMO_SUCCESS);
     }
 
@@ -121,7 +121,7 @@ public class BookDetailPresenter extends VerticalLayout {
         updateBookRating(newStars);
         bookRepository.save(currentBook);
 
-        CustomNotification.showNotification("Оценка сохранена! Перезагрузите страницу",
+        CustomNotification.showNotification("Оценка сохранена!",
                 NotificationVariant.LUMO_SUCCESS);
 
     }

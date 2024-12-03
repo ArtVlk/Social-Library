@@ -101,7 +101,7 @@ public class UserEditorService {
         userRepository.delete(editingUser);
         usersGrid.setItems((Collection<User>) userRepository.findAll());
 
-        CustomNotification.showNotification("Забанен!", NotificationVariant.LUMO_ERROR);
+        CustomNotification.showNotification("Забанен! \uD83D\uDE08", NotificationVariant.LUMO_ERROR);
     }
 
 }

@@ -86,7 +86,7 @@ public class PersonalBookDetailPresenter extends VerticalLayout {
             updateBookRating(userBook, newRating);
             userBookRepository.save(userBook);
             bookRepository.save(currentBook);
-            Notification.show("Оценка сохранена! Перезагрузите страницу.");
+            Notification.show("Оценка сохранена!");
         } else {
             Notification.show("Книга не найдена в вашей библиотеке.");
         }
@@ -172,7 +172,7 @@ public class PersonalBookDetailPresenter extends VerticalLayout {
             removeUserRatingFromBook(userBook);
             userBookRepository.delete(userBook);
 
-            Notification.show("Книга удалена из вашей библиотеки. Перезагрузите страницу.");
+            Notification.show("Книга удалена из вашей библиотеки.");
         } else {
             Notification.show("Книга не найдена в вашей библиотеке.");
         }
