@@ -6,8 +6,19 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;
 
-
+/**
+ * Репозиторий для работы с сущностью жанра.
+ * <p>
+ * Предоставляет методы для выполнения CRUD-операций с жанрами, а также поиск жанра по имени.
+ * </p>
+ */
 @Repository
 public interface GenreRepository extends CrudRepository<Genre, Long>{
+    /**
+     * Находит жанр по имени.
+     *
+     * @param name имя жанра
+     * @return Optional, содержащий найденный жанр, или пустой Optional, если жанр не найден
+     */
     Optional<Genre> findByName(String name);
 }

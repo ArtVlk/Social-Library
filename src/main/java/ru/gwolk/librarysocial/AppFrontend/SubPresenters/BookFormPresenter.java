@@ -17,6 +17,11 @@ import ru.gwolk.librarysocial.AppBackend.Entities.Author;
 import ru.gwolk.librarysocial.AppBackend.Entities.Book;
 import ru.gwolk.librarysocial.AppBackend.Entities.Genre;
 
+/**
+ * Класс для создания и редактирования книги.
+ * Обеспечивает функциональность для ввода данных о книге, включая название, автора, жанр, описание и оценку,
+ * а также их сохранение в базу данных.
+ */
 @SpringComponent
 @UIScope
 public class BookFormPresenter extends VerticalLayout {
@@ -32,6 +37,14 @@ public class BookFormPresenter extends VerticalLayout {
     private Button saveButton = new Button("Сохранить");
     private Button cancelButton = new Button("Отмена");
 
+    /**
+     * Конструктор класса BookFormPresenter.
+     * Инициализирует необходимые репозитории и настраивает компоненты формы.
+     *
+     * @param bookRepository репозиторий для работы с книгами
+     * @param authorRepository репозиторий для работы с авторами
+     * @param genreRepository репозиторий для работы с жанрами
+     */
     @Autowired
     public BookFormPresenter(BookRepository bookRepository, AuthorRepository authorRepository, GenreRepository genreRepository) {
         this.bookRepository = bookRepository;
@@ -50,6 +63,9 @@ public class BookFormPresenter extends VerticalLayout {
         setVisible(false);
     }
 
+    /**
+     * Очищает все поля формы.
+     */
     public void clearForm() {
         nameField.clear();
         authorField.clear();
@@ -58,6 +74,10 @@ public class BookFormPresenter extends VerticalLayout {
         ratingField.clear();
     }
 
+    /**
+     * Сохраняет книгу в базе данных.
+     * Проверяет, заполнены ли все поля формы, и сохраняет книгу, создав нового автора и жанр, если необходимо.
+     */
     public void saveBook() {
         if (isValid()) {
             Author author = getOrCreateAuthor(authorField.getValue());

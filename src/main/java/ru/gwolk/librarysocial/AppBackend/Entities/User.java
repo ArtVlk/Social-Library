@@ -5,6 +5,15 @@ import jakarta.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
+
+/**
+ * Представляет сущность пользователя в системе.
+ * <p>
+ * Пользователь может иметь связанный номер телефона, страну, адрес,
+ * список книг и другие атрибуты, такие как роль и пол.
+ * Сущность отображается в таблицу "users" базы данных.
+ * </p>
+ */
 @Entity
 @Table(name = "users")
 public class User {
@@ -13,6 +22,11 @@ public class User {
         this.password = password;
         this.role = role;
     }
+
+    /**
+     * Конструктор по умолчанию.
+     * Используется для создания пустого объекта пользователя, например, при десериализации.
+     */
     public User() {};
 
     @Id
@@ -38,6 +52,16 @@ public class User {
     )
     private Set<Book> books = new HashSet<>();
 
+    /**
+     * Конструктор для создания пользователя с деталями.
+     *
+     * @param name        имя пользователя
+     * @param password    пароль пользователя
+     * @param phoneNumber номер телефона
+     * @param country     информация о стране (формат: "код название")
+     * @param gender      пол пользователя
+     * @param address     информация об адресе (формат: "улица город индекс")
+     */
     public User(String name, String password, String phoneNumber, String country, String gender, String address) {
         this.name = name;
         this.password = password;

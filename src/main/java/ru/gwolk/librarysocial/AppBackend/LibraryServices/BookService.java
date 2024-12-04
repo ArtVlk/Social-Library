@@ -13,6 +13,12 @@ import ru.gwolk.librarysocial.AppBackend.SocialServices.CurrentUserService;
 import java.util.Collection;
 import java.util.Optional;
 
+/**
+ * Сервис для работы с книгами.
+ * <p>
+ * Обеспечивает операции для управления книгами, обновления интерфейса и удаления связанных данных.
+ * </p>
+ */
 @Service
 @UIScope
 public class BookService {
@@ -21,6 +27,13 @@ public class BookService {
     private final CurrentUserService currentUserService;
     private Grid<Book> booksGrid;
 
+    /**
+     * Конструктор для инициализации сервиса.
+     *
+     * @param bookRepository      репозиторий для работы с книгами
+     * @param userBookRepository  репозиторий для работы с пользовательскими книгами
+     * @param currentUserService  сервис для получения информации о текущем пользователе
+     */
     @Autowired
     public BookService(BookRepository bookRepository, UserBookRepository userBookRepository,
                        CurrentUserService currentUserService) {
@@ -29,12 +42,20 @@ public class BookService {
         this.currentUserService = currentUserService;
     }
 
-
+    /**
+     * Обновляет данные в предоставленной таблице книг.
+     *
+     * @param booksGrid таблица книг для обновления
+     */
     public void updateGrid(Grid<Book> booksGrid) {
         booksGrid.setItems((Collection<Book>) bookRepository.findAll());
     }
 
-
+    /**
+     * Удаляет книгу и все связанные с ней записи из базы данных.
+     *
+     * @param bookId идентификатор книги, которую нужно удалить
+     */
     @Transactional
     public void deleteBook(Long bookId) {
         Optional<Book> bookOptional = bookRepository.findById(bookId);

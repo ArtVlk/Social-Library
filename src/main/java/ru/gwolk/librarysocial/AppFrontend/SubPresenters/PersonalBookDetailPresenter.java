@@ -17,6 +17,11 @@ import ru.gwolk.librarysocial.AppBackend.SocialServices.CurrentUserService;
 
 import java.util.Optional;
 
+
+/**
+ * Класс для отображения и редактирования информации о книге в личной библиотеке пользователя.
+ * Обеспечивает функциональность для сохранения оценки, отзыва и удаления книги из библиотеки.
+ */
 @SpringComponent
 @UIScope
 public class PersonalBookDetailPresenter extends VerticalLayout {
@@ -35,6 +40,15 @@ public class PersonalBookDetailPresenter extends VerticalLayout {
     private Button deleteFromUserLibraryButton = new Button("Удалить");
     private Button cancelButton = new Button("Отмена");
 
+    /**
+     * Конструктор класса PersonalBookDetailPresenter.
+     * Инициализирует необходимые репозитории и сервисы, а также настраивает компоненты для взаимодействия с пользователем.
+     *
+     * @param bookRepository репозиторий для работы с книгами
+     * @param userBookRepository репозиторий для работы с пользовательскими книгами
+     * @param currentUserService сервис для получения текущего пользователя
+     * @param userRepository репозиторий для работы с пользователями
+     */
     public PersonalBookDetailPresenter(BookRepository bookRepository, UserBookRepository userBookRepository,
                                        CurrentUserService currentUserService, UserRepository userRepository) {
         this.userBookRepository = userBookRepository;

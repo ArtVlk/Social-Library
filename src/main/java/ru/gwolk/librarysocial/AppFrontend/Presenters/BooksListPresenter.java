@@ -26,6 +26,11 @@ import ru.gwolk.librarysocial.AppFrontend.AppLayouts.MainLayout;
 
 import java.util.Collection;
 
+/**
+ * Презентер для отображения списка книг в библиотеке.
+ * Этот класс управляет отображением и взаимодействием с компонентами UI, такими как таблица книг, фильтр и кнопки сортировки.
+ * Презентер поддерживает отображение книг с возможностью фильтрации, сортировки, добавления и просмотра детальной информации о книге.
+ */
 @Route(value = "books", layout = MainLayout.class)
 @PageTitle("Книги")
 @PermitAll
@@ -45,7 +50,16 @@ public class BooksListPresenter extends VerticalLayout {
     private final Button sortButton = new Button("Сортировать по", VaadinIcon.SORT.create());
     private int sortState = 0; // 0 - по названию, 1 - по автору, 2 - по жанру, 3 - по оценке
 
-
+    /**
+     * Конструктор для инициализации всех необходимых зависимостей.
+     *
+     * @param bookRepository репозиторий для работы с книгами.
+     * @param currentUserService сервис для получения информации о текущем пользователе.
+     * @param bookDetailPresenter презентер для отображения деталей книги.
+     * @param bookFormPresenter презентер для отображения формы добавления книги.
+     * @param bookEditorPresenter презентер для редактирования книги.
+     * @param bookService сервис для работы с книгами.
+     */
     @Autowired
     public BooksListPresenter(BookRepository bookRepository, CurrentUserService currentUserService,
                               BookDetailPresenter bookDetailPresenter, BookFormPresenter bookFormPresenter,
@@ -118,10 +132,6 @@ public class BooksListPresenter extends VerticalLayout {
         bookDetailPresenter.setVisible(false);
         bookEditorPresenter.setVisible(false);
         bookFormPresenter.setVisible(true);
-    }
-
-    public void updateGrid() {
-        grid.setItems((Collection<Book>) bookRepository.findAll());
     }
 
     private void showBook(String filterText) {

@@ -22,6 +22,11 @@ import ru.gwolk.librarysocial.AppBackend.SocialServices.CurrentUserService;
 
 import java.util.Optional;
 
+/**
+ * Презентер для отображения и взаимодействия с деталями книги.
+ * Этот класс управляет отображением информации о книге, включая её описание, автора, рейтинг,
+ * а также позволяет пользователю добавлять книгу в свою библиотеку и сохранять оценки.
+ */
 @SpringComponent
 @UIScope
 public class BookDetailPresenter extends VerticalLayout {
@@ -38,6 +43,14 @@ public class BookDetailPresenter extends VerticalLayout {
     private Button addToLibraryButton = new Button("Добавить в библиотеку");
     private Button cancelButton = new Button("Отмена");
 
+    /**
+     * Конструктор для инициализации всех необходимых зависимостей.
+     *
+     * @param bookRepository репозиторий для работы с книгами.
+     * @param userBookRepository репозиторий для работы с личными книгами пользователя.
+     * @param currentUserService сервис для получения текущего пользователя.
+     * @param userRepository репозиторий для работы с пользователями.
+     */
     @Autowired
     public BookDetailPresenter(BookRepository bookRepository, UserBookRepository userBookRepository,
                                CurrentUserService currentUserService, UserRepository userRepository) {

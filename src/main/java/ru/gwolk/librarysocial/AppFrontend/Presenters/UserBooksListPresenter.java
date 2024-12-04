@@ -20,6 +20,11 @@ import ru.gwolk.librarysocial.AppBackend.SocialServices.CurrentUserService;
 
 import java.util.Collection;
 
+/**
+ * Презентер для отображения списка книг в библиотеке.
+ * Этот класс управляет отображением и взаимодействием с компонентами UI, такими как таблица книг, фильтр и кнопки сортировки.
+ * Презентер поддерживает отображение книг с возможностью фильтрации, сортировки, добавления и просмотра детальной информации о книге.
+ */
 @Route(value = "user-local-books", layout = MainLayout.class)
 @PageTitle("Мои книги")
 @PermitAll
@@ -32,6 +37,14 @@ public class UserBooksListPresenter extends VerticalLayout {
     private final Button sortButton = new Button("Сортировать по", VaadinIcon.SORT.create());
     private int sortState = 0; // 0 - по названию, 1 - по автору, 2 - по жанру
 
+
+    /**
+     * Конструктор для инициализации всех необходимых зависимостей.
+     *
+     * @param userBookRepository репозиторий для работы с личными книгами пользователей.
+     * @param currentUserService сервис для получения текущего пользователя.
+     * @param personalBookDetailPresenter презентер для отображения деталей книги.
+     */
     @Autowired
     public UserBooksListPresenter(UserBookRepository userBookRepository, CurrentUserService currentUserService,
                                   PersonalBookDetailPresenter personalBookDetailPresenter) {

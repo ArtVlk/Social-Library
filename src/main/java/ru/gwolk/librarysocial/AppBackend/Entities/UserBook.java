@@ -2,6 +2,13 @@ package ru.gwolk.librarysocial.AppBackend.Entities;
 
 import jakarta.persistence.*;
 
+/**
+ * Представляет сущность связи между пользователем и книгой.
+ * <p>
+ * Хранит информацию о том, какую книгу пользователь прочитал, его рейтинг и отзыв.
+ * Сущность отображается в таблицу "user_books" базы данных.
+ * </p>
+ */
 @Entity
 @Table(name = "user_books")
 public class UserBook {
@@ -21,12 +28,23 @@ public class UserBook {
 
     private String review;
 
+    /**
+     * Конструктор для создания связи между пользователем и книгой с указанием пользовательского рейтинга.
+     *
+     * @param user       пользователь, связанный с книгой
+     * @param book       книга, связанная с пользователем
+     * @param userRating пользовательский рейтинг книги
+     */
     public UserBook (User user, Book book, Integer userRating) {
         this.user = user;
         this.book = book;
         this.userRating = userRating;
     }
 
+    /**
+     * Конструктор по умолчанию.
+     * Используется для создания пустого объекта связи, например, при десериализации.
+     */
     public UserBook() {
 
     }

@@ -18,7 +18,10 @@ import ru.gwolk.librarysocial.AppBackend.Entities.Author;
 import ru.gwolk.librarysocial.AppBackend.Entities.Book;
 import ru.gwolk.librarysocial.AppBackend.Entities.Genre;
 
-
+/**
+ * Класс для представления редактора книги.
+ * Обеспечивает функциональность для редактирования, сохранения, удаления и отмены изменений книги.
+ */
 @SpringComponent
 @UIScope
 public class BookEditorPresenter extends VerticalLayout {
@@ -28,7 +31,6 @@ public class BookEditorPresenter extends VerticalLayout {
     private final AuthorRepository authorRepository;
     private final GenreRepository genreRepository;
     private final UserBookRepository userBookRepository;
-
     private TextField nameField = new TextField("Название");
     private TextField authorField = new TextField("Автор");
     private TextField genreField = new TextField("Жанр");
@@ -36,9 +38,18 @@ public class BookEditorPresenter extends VerticalLayout {
     private Button saveButton = new Button("Сохранить");
     private Button cancelButton = new Button("Отмена");
     private Button deleteButton = new Button("Удалить");
-
     private Book currentBook;
 
+    /**
+     * Конструктор класса BookEditorPresenter.
+     * Инициализирует необходимые репозитории и сервисы, а также настраивает интерфейс.
+     *
+     * @param bookRepository репозиторий для работы с книгами
+     * @param authorRepository репозиторий для работы с авторами
+     * @param genreRepository репозиторий для работы с жанрами
+     * @param userBookRepository репозиторий для работы с пользовательскими книгами
+     * @param bookService сервис для работы с книгами
+     */
     @Autowired
     public BookEditorPresenter(BookRepository bookRepository, AuthorRepository authorRepository,
                                GenreRepository genreRepository, UserBookRepository userBookRepository,
@@ -74,6 +85,11 @@ public class BookEditorPresenter extends VerticalLayout {
         setVisible(false);
     }
 
+    /**
+     * Редактирует книгу. Заполняет поля формы значениями книги.
+     *
+     * @param book книга, которую необходимо отредактировать
+     */
     public void editBook(Book book) {
         this.currentBook = book;
 

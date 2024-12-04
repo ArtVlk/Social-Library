@@ -5,6 +5,13 @@ import jakarta.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Представляет сущность жанра в системе.
+ * <p>
+ * Жанр может быть связан с множеством книг.
+ * Сущность отображается в таблицу "genres" базы данных.
+ * </p>
+ */
 @Entity
 @Table(name = "genres")
 public class Genre {
@@ -20,11 +27,20 @@ public class Genre {
         books.add(book);
     }
 
-
+    /**
+     * Конструктор для создания жанра с именем.
+     *
+     * @param name имя жанра
+     */
     public Genre(String name) {
         this.name = name;
     }
 
+
+    /**
+     * Конструктор по умолчанию.
+     * Используется для создания пустого объекта жанра, например, при десериализации.
+     */
     public Genre() {
 
     }

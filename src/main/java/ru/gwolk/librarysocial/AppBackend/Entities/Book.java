@@ -2,6 +2,14 @@ package ru.gwolk.librarysocial.AppBackend.Entities;
 
 import jakarta.persistence.*;
 
+/**
+ * Представляет сущность книги в системе.
+ * <p>
+ * Каждая книга имеет такие атрибуты, как название, описание, рейтинг (в звездах),
+ * жанр, автор и статистическую информацию о пользовательских оценках.
+ * Сущность отображается в таблицу "books" базы данных.
+ * </p>
+ */
 @Entity
 @Table(name = "books")
 public class Book {
@@ -22,6 +30,12 @@ public class Book {
     @JoinColumn(name = "author_id")
     private Author author;
 
+    /**
+     * Конструктор инициализации
+     * <p>
+     * Если создаём книгу со всеми полями
+     * </p>
+     */
     public Book(String name, Author author, Genre genre, String description, int stars) {
         this.name = name;
         this.author = author;
@@ -30,6 +44,12 @@ public class Book {
         this.stars = stars;
     }
 
+    /**
+     * Конструктор по умолчанию
+     * <p>
+     * Создаём пустую книгу
+     * </p>
+     */
     public Book() {}
 
     public Genre getGenre() {

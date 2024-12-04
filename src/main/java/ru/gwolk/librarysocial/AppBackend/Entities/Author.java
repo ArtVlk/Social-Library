@@ -5,6 +5,13 @@ import jakarta.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Представляет сущность автора в системе.
+ * <p>
+ * Автор может быть связан с множеством книг.
+ * Сущность отображается в таблицу "authors" базы данных.
+ * </p>
+ */
 @Entity
 @Table(name = "authors")
 public class Author {
@@ -20,10 +27,19 @@ public class Author {
         books.add(book);
     }
 
+    /**
+     * Конструктор для создания автора с именем.
+     *
+     * @param name имя автора
+     */
     public Author(String name) {
         this.name = name;
     }
 
+    /**
+     * Конструктор по умолчанию.
+     * Используется для создания пустого объекта автора, например, при десериализации.
+     */
     public Author() {
 
     }
