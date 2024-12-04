@@ -24,15 +24,11 @@ import java.util.NoSuchElementException;
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class MyUserDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
-    private final PhoneNumberRepository phoneNumberRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public MyUserDetailsService(UserRepository userRepository,
-                                PhoneNumberRepository phoneNumberRepository,
-                                PasswordEncoder passwordEncoder) {
+    public MyUserDetailsService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
-        this.phoneNumberRepository = phoneNumberRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -64,10 +60,6 @@ public class MyUserDetailsService implements UserDetailsService {
         catch (NoSuchElementException e) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             userRepository.save(user);
-
-            /*PhoneNumber pN = user.getPhoneNumber();
-            pN.setUser(user);
-            phoneNumberRepository.save(pN);*/
 
             return true;
         }

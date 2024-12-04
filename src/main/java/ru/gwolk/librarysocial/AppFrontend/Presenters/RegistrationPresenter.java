@@ -15,11 +15,9 @@ import ru.gwolk.librarysocial.AppBackend.CommonServices.RegistrationFormBinder;
 @PageTitle("Регистрация")
 @AnonymousAllowed
 public class RegistrationPresenter extends VerticalLayout {
-    private final MyUserDetailsService userDetailsService;
     private H1 registrationTitle;
     @Autowired
     public RegistrationPresenter(MyUserDetailsService userDetailsService) {
-        this.userDetailsService = userDetailsService;
         registrationTitle = new H1("Регистрация");
         RegistrationForm registrationForm = new RegistrationForm();
 

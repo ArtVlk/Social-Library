@@ -27,7 +27,6 @@ public class UserBooksListPresenter extends VerticalLayout {
     private final UserBookRepository userBookRepository;
     private final CurrentUserService currentUserService;
     private final TextField filter = new TextField("", "Нажмите на фильтр");
-    private final PersonalBookDetailPresenter personalBookDetailPresenter;
     private final Grid<UserBook> grid;
 
     private final Button sortButton = new Button("Сортировать по", VaadinIcon.SORT.create());
@@ -38,7 +37,6 @@ public class UserBooksListPresenter extends VerticalLayout {
                                   PersonalBookDetailPresenter personalBookDetailPresenter) {
         this.userBookRepository = userBookRepository;
         this.currentUserService = currentUserService;
-        this.personalBookDetailPresenter = personalBookDetailPresenter;
 
         grid = new Grid<>(UserBook.class);
         setUserBooksGrid(grid);

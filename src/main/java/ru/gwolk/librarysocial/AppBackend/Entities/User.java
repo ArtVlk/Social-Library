@@ -19,8 +19,6 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
-    /*@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Set<PhoneNumber> phoneNumbers = new HashSet<>();*/
     @OneToOne(mappedBy = "user", cascade = CascadeType.PERSIST)
     private PhoneNumber phoneNumber;
     @ManyToOne(cascade = CascadeType.PERSIST)
@@ -109,14 +107,6 @@ public class User {
     public void setPhoneNumber(PhoneNumber phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
-    /*public Set<PhoneNumber> getPhoneNumbers() {
-        return phoneNumbers;
-    }
-
-    public void setPhoneNumbers(Set<PhoneNumber> phoneNumbers) {
-        this.phoneNumbers = phoneNumbers;
-    }*/
-
     public Country getCountry() {
         return country;
     }

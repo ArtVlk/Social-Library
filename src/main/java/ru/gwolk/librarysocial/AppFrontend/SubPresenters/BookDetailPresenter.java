@@ -28,7 +28,6 @@ public class BookDetailPresenter extends VerticalLayout {
     private final UserBookRepository userBookRepository;
     private final BookRepository bookRepository;
     private final CurrentUserService currentUserService;
-    private final UserRepository userRepository;
     private Book currentBook;
 
     private final TextField authorField = new TextField("Автор и название");
@@ -45,7 +44,6 @@ public class BookDetailPresenter extends VerticalLayout {
         this.userBookRepository = userBookRepository;
         this.bookRepository = bookRepository;
         this.currentUserService = currentUserService;
-        this.userRepository = userRepository;
 
         descriptionField.setWidth("80%");
         descriptionField.setHeight("200px");

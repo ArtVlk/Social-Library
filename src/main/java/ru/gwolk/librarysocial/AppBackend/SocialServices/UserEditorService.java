@@ -20,7 +20,7 @@ import ru.gwolk.librarysocial.AppBackend.Entities.Subscription;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 @Service
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
@@ -29,9 +29,6 @@ public class UserEditorService {
     private SubscriptionsRepository subscriptionsRepository;
     private UserRepository userRepository;
     private UserBookRepository userBookRepository;
-    private Notification notificationOk;
-    private Notification notificationWarning;
-    private Notification notificationBan;
     private User me;
     private Grid<User> usersGrid;
 

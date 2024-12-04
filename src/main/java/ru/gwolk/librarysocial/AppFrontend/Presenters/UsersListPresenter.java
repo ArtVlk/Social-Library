@@ -26,7 +26,6 @@ import java.util.Collection;
 @PermitAll
 public class UsersListPresenter extends VerticalLayout {
     private final String SUBSCRIPTIONS_PAGE = "subscriptions";
-    private final UserRepository userRepository;
     private final TextField filter = new TextField("", "Нажмите на фильтр");
     private final Button subscriptionsButton = new Button("Подписки", VaadinIcon.USER.create());
     private HorizontalLayout toolbar;
@@ -37,7 +36,6 @@ public class UsersListPresenter extends VerticalLayout {
     public UsersListPresenter(UserRepository userRepository,
                               UserEditorPresenter userEditorPresenter,
                               UserEditorService userEditorService) {
-        this.userRepository = userRepository;
         toolbar = new HorizontalLayout();
         usersGrid = userEditorService.getUsersGrid();
 

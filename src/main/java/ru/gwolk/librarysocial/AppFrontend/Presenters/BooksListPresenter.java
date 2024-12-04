@@ -169,7 +169,7 @@ public class BooksListPresenter extends VerticalLayout {
                 sortButton.setText("Сортировать по: Оценка");
                 break;
         }
-        sortState = (sortState + 1) % 4; // переключение состояния
+        sortState = (sortState + 1) % 4;
     }
 
 }

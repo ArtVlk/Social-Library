@@ -3,6 +3,7 @@ package ru.gwolk.librarysocial.AppFrontend.SubPresenters;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
@@ -11,6 +12,7 @@ import com.vaadin.flow.spring.annotation.UIScope;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.gwolk.librarysocial.AppBackend.CRUDRepositories.SubscriptionsRepository;
 import ru.gwolk.librarysocial.AppBackend.CRUDRepositories.UserRepository;
+import ru.gwolk.librarysocial.AppBackend.CommonServices.CustomNotification;
 import ru.gwolk.librarysocial.AppBackend.Entities.User;
 import ru.gwolk.librarysocial.AppBackend.Entities.UserBook;
 import ru.gwolk.librarysocial.AppBackend.SocialServices.CurrentUserService;
@@ -22,13 +24,10 @@ public class SubscriptionUserEditorPresenter extends VerticalLayout {
     private SubscriptionsRepository subscriptionsRepository;
     private UserRepository userRepository;
     private User subscribedUser;
-    private User me;
     private TextField name;
     private Button lookFavouritesButton;
     private Button unsubscibeButton;
     private Binder<User> userBinder;
-    private CurrentUserService currentUserService;
-    private SubscriptionsService subscriptionsService;
     private Grid<UserBook> favouriteBooks;
     private TextField review;
     private TextField userRating;
@@ -37,12 +36,8 @@ public class SubscriptionUserEditorPresenter extends VerticalLayout {
     @Autowired
     public SubscriptionUserEditorPresenter(SubscriptionsService subscriptionsService,
                                            SubscriptionsRepository subscriptionsRepository,
-                                           UserRepository userRepository,
-                                           CurrentUserService currentUserService) {
-
-        this.subscriptionsService = subscriptionsService;
+                                           UserRepository userRepository) {
         this.subscriptionsRepository = subscriptionsRepository;
-        this.currentUserService = currentUserService;
         this.userRepository = userRepository;
         favouriteBooks = subscriptionsService.createFavouriteBooks();
         favouriteBooks.setVisible(false);
@@ -72,6 +67,7 @@ public class SubscriptionUserEditorPresenter extends VerticalLayout {
 
         unsubscibeButton.addClickListener(e -> {
             subscriptionsService.unsubscribe(subscribedUser);
+            CustomNotification.showNotification("Вы отписались", NotificationVariant.LUMO_SUCCESS);
         });
         lookFavouritesButton.addClickListener(e -> subscriptionsService.fillAndShowFavouriteBooks(subscribedUser));
 

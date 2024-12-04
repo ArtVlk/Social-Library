@@ -22,24 +22,14 @@ public class SubscriptionsPresenter extends VerticalLayout {
     private Grid<User> subscriptionsGrid;
     private UserRepository userRepository;
     private H1 subscriptionsTitle;
-    private CurrentUserService currentUserService;
-    private SubscriptionsRepository subscriptionsRepository;
-    private SubscriptionUserEditorPresenter subscriptionUserEditorPresenter;
-    private SubscriptionsService subscriptionsService;
     @Autowired
     public SubscriptionsPresenter(
             SubscriptionsService subscriptionsService,
             UserRepository userRepository,
-            SubscriptionsRepository subscriptionsRepository,
-            CurrentUserService currentUserService,
             SubscriptionUserEditorPresenter subscriptionUserEditorPresenter
     )
     {
-        this.subscriptionsService = subscriptionsService;
         this.userRepository = userRepository;
-        this.subscriptionsRepository = subscriptionsRepository;
-        this.subscriptionUserEditorPresenter = subscriptionUserEditorPresenter;
-        this.currentUserService = currentUserService;
         this.subscriptionsGrid = subscriptionsService.getSubscriptionsGrid();
         this.subscriptionsTitle = new H1("Ваши подписки");
 
