@@ -6,6 +6,13 @@ import jakarta.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Сущность {@link Country} представляет страну, которая может быть связана с пользователями и адресами.
+ * Этот класс используется для хранения информации о странах в базе данных.
+ *
+ * Страна может быть связана с множеством пользователей и адресов, и каждый пользователь или адрес
+ * может иметь одну страну, к которой он относится.
+ */
 @Entity
 @Table(name = "countries")
 public class Country {
@@ -16,13 +23,28 @@ public class Country {
     private String name;
     private String code;
 
+
+    /**
+     * Конструктор для создания страны с именем и кодом.
+     *
+     * @param name Название страны.
+     * @param code Код страны.
+     */
     public Country(String name, String code) {
         this.name = name;
         this.code = code;
     }
 
+    /**
+     * Конструктор по умолчанию для создания пустой страны.
+     */
     public Country() {}
 
+    /**
+     * Конструктор для создания страны только с именем.
+     *
+     * @param name Название страны.
+     */
     public Country(String name) {
         this.name = name;
     }

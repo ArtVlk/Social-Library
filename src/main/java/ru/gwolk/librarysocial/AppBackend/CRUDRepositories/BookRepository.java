@@ -4,12 +4,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import ru.gwolk.librarysocial.AppBackend.Entities.Book;
 import org.springframework.data.repository.CrudRepository;
+import ru.gwolk.librarysocial.AppBackend.Entities.Subscription;
 
 import java.util.List;
 import java.util.Optional;
 
 /**
- * Репозиторий для работы с сущностью книги.
+ * Репозиторий для работы с сущностью {@link Book}.
  * <p>
  * Предоставляет методы для выполнения CRUD-операций с книгами, а также различные способы поиска и сортировки.
  * </p>

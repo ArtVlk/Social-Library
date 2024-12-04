@@ -12,18 +12,31 @@ import ru.gwolk.librarysocial.AppBackend.Entities.User;
 import ru.gwolk.librarysocial.AppBackend.Entities.UserFromRegistration;
 import ru.gwolk.librarysocial.AppFrontend.AppLayouts.RegistrationForm;
 
+/**
+ * Класс для связывания и валидации формы регистрации пользователя.
+ * Обрабатывает привязку полей формы, валидацию пароля и сохранение данных в базу.
+ */
 public class RegistrationFormBinder {
     private final RegistrationForm registrationForm;
 
     private final MyUserDetailsService userDetailsService;
     private boolean enablePasswordValidation;
 
+    /**
+     * Конструктор для инициализации объекта.
+     *
+     * @param registrationForm форма регистрации
+     * @param userDetailsService сервис для работы с пользователями
+     */
     public RegistrationFormBinder(RegistrationForm registrationForm,
                                   MyUserDetailsService userDetailsService) {
         this.registrationForm = registrationForm;
         this.userDetailsService = userDetailsService;
     }
 
+    /**
+     * Добавляет привязку и валидацию для всех полей формы регистрации.
+     */
     public void addBindingAndValidation() {
         BeanValidationBinder<UserFromRegistration> binder = new BeanValidationBinder<>(UserFromRegistration.class);
         binder.bindInstanceFields(registrationForm);

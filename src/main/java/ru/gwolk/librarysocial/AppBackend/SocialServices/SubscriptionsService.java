@@ -17,6 +17,13 @@ import ru.gwolk.librarysocial.AppBackend.Entities.Subscription;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Сервис {@link SubscriptionsService} предназначен для управления подписками пользователей, а также для работы с их избранными книгами.
+ * Сервис предоставляет функциональность для отображения подписок, отмены подписки, создания и отображения избранных книг пользователя.
+ *
+ * {@link SubscriptionsService} взаимодействует с репозиториями {@link SubscriptionsRepository} и {@link UserBookRepository},
+ * а также использует {@link CurrentUserService} для работы с текущим пользователем.
+ */
 @Service
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class SubscriptionsService {
@@ -26,7 +33,16 @@ public class SubscriptionsService {
     private Grid<User> subscriptionsGrid;
     private Grid<UserBook> favouriteBooks;
 
+
     private CurrentUserService currentUserService;
+
+    /**
+     * Конструктор для инициализации {@link SubscriptionsService}.
+     *
+     * @param subscriptionsRepository Репозиторий для работы с подписками.
+     * @param currentUserService Сервис для получения текущего пользователя.
+     * @param userBookRepository Репозиторий для работы с книгами пользователя.
+     */
     @Autowired
     public SubscriptionsService(SubscriptionsRepository subscriptionsRepository,
                                 CurrentUserService currentUserService,
@@ -37,6 +53,15 @@ public class SubscriptionsService {
         createAndSetSubsciptionsGrid();
     }
 
+    /**
+     * Отменяет подписку на указанного пользователя.
+     *
+     * Метод находит подписку между текущим пользователем и указанным пользователем.
+     * Если подписка существует, она удаляется.
+     *
+     * @param subscribedUser Пользователь, на которого нужно отменить подписку.
+     * @throws IllegalArgumentException если подписка не найдена.
+     */
     public void unsubscribe(User subscribedUser) {
         me = getUser();
         Subscription subscription = subscriptionsRepository.findSubscriptionByUserAndSubscribedUser(me, subscribedUser);
@@ -61,6 +86,11 @@ public class SubscriptionsService {
                 .setTextAlign(ColumnTextAlign.CENTER);;
     }
 
+    /**
+     * Создает и настраивает таблицу с избранными книгами пользователя.
+     *
+     * @return Настроенная таблица с книгами.
+     */
     public Grid<UserBook> createFavouriteBooks() {
         favouriteBooks = new Grid<>(UserBook.class);
         favouriteBooks.setHeight("300px");
@@ -81,6 +111,14 @@ public class SubscriptionsService {
 
         return favouriteBooks;
     }
+
+    /**
+     * Заполняет таблицу избранных книг и делает её видимой.
+     *
+     * Метод заполняет таблицу favouriteBooks книгами, связанными с указанным пользователем.
+     *
+     * @param subscribedUser Пользователь, чьи избранные книги нужно отобразить.
+     */
     public void fillAndShowFavouriteBooks(User subscribedUser) {
         favouriteBooks.setItems(userBookRepository.findByUser(subscribedUser));
         favouriteBooks.setVisible(true);

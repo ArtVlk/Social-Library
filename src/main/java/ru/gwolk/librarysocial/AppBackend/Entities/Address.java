@@ -5,6 +5,12 @@ import jakarta.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Сущность {@link Address} представляет адрес пользователя, включающий город, улицу и номер дома.
+ * Этот класс используется для хранения информации о местоположении пользователя в базе данных.
+ *
+ * Адрес связан с пользователями через отношение "один ко многим", а также связан с страной через отношение "многие к одному".
+ */
 @Entity
 @Table(name = "addresses")
 public class Address {
@@ -17,11 +23,22 @@ public class Address {
     private String city;
     @Column
     private String houseNumber;
+    /**
+     * Конструктор для создания адреса с указанным городом, улицей и номером дома.
+     *
+     * @param city Город, в котором находится адрес.
+     * @param street Улица, на которой находится адрес.
+     * @param houseNumber Номер дома по указанной улице.
+     */
     public Address(String city, String street, String houseNumber) {
         this.city = city;
         this.street = street;
         this.houseNumber = houseNumber;
     }
+
+    /**
+     * Конструктор по умолчанию для создания пустого адреса.
+     */
     public Address() {}
 
 

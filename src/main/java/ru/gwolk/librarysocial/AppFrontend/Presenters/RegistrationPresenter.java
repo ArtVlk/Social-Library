@@ -11,11 +11,22 @@ import ru.gwolk.librarysocial.AppBackend.CommonServices.MyUserDetailsService;
 import ru.gwolk.librarysocial.AppFrontend.AppLayouts.RegistrationForm;
 import ru.gwolk.librarysocial.AppBackend.CommonServices.RegistrationFormBinder;
 
+/**
+ * Презентер для страницы регистрации нового пользователя.
+ * Этот класс обрабатывает отображение формы регистрации и привязку данных формы к сервису для регистрации пользователя.
+ */
 @Route("registration")
 @PageTitle("Регистрация")
 @AnonymousAllowed
 public class RegistrationPresenter extends VerticalLayout {
     private H1 registrationTitle;
+
+    /**
+     * Конструктор, который инициализирует компоненты страницы регистрации.
+     * Создаёт форму регистрации и настраивает её привязку с сервисом для обработки данных.
+     *
+     * @param userDetailsService Сервис для обработки данных пользователя
+     */
     @Autowired
     public RegistrationPresenter(MyUserDetailsService userDetailsService) {
         registrationTitle = new H1("Регистрация");

@@ -20,6 +20,11 @@ import ru.gwolk.librarysocial.AppBackend.Entities.StringRoles;
 import ru.gwolk.librarysocial.AppBackend.Entities.User;
 import ru.gwolk.librarysocial.AppBackend.SocialServices.UserEditorService;
 
+/**
+ * Презентер для редактирования информации о пользователе в интерфейсе.
+ * Этот класс управляет отображением и редактированием информации о пользователе, а также действиями
+ * подписки и бана пользователя в зависимости от его роли.
+ */
 @SpringComponent
 @UIScope
 public class UserEditorPresenter extends VerticalLayout implements KeyNotifier {
@@ -33,9 +38,13 @@ public class UserEditorPresenter extends VerticalLayout implements KeyNotifier {
     private Button banUserButton = new Button("Забанить", VaadinIcon.BAN.create());
     private Binder<User> binder = new Binder<>(User.class);
 
-
-
-
+    /**
+     * Конструктор, инициализирующий компоненты и действия для редактирования информации о пользователе.
+     *
+     * @param userRepository Репозиторий для работы с пользователями
+     * @param authenticationContext Контекст аутентификации для проверки ролей пользователя
+     * @param userEditorService Сервис для работы с пользователями (подписка, бан)
+     */
     @Autowired
     public UserEditorPresenter(UserRepository userRepository,
                                AuthenticationContext authenticationContext,
@@ -81,7 +90,11 @@ public class UserEditorPresenter extends VerticalLayout implements KeyNotifier {
         }
     }
 
-
+    /**
+     * Устанавливает редактируемого пользователя и отображает его информацию.
+     *
+     * @param newUser Новый пользователь для редактирования
+     */
     public void setEditingUser(User newUser) {
         if (newUser == null) {
             setVisible(true);

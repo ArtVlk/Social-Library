@@ -2,6 +2,14 @@ package ru.gwolk.librarysocial.AppBackend.Entities;
 
 import jakarta.validation.constraints.NotBlank;
 
+/**
+ * Класс {@link UserFromRegistration} используется для представления данных,
+ * которые отправляются пользователем при регистрации в систему.
+ *
+ * Этот класс содержит основные поля, такие как имя, пароль, страну, номер телефона,
+ * пол и адрес, которые необходимы для создания нового пользователя.
+ * Поля класса имеют аннотацию {@link NotBlank}, которая обеспечивает валидацию на отсутствие пустых значений.
+ */
 public class UserFromRegistration {
     @NotBlank
     private String name;

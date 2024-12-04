@@ -19,10 +19,19 @@ import ru.gwolk.librarysocial.AppFrontend.Presenters.SubscriptionsPresenter;
 import ru.gwolk.librarysocial.AppFrontend.Presenters.UserBooksListPresenter;
 import ru.gwolk.librarysocial.AppFrontend.Presenters.UsersListPresenter;
 
+/**
+ * Основной макет приложения, включающий навигацию, меню и отображение информации о текущем представлении.
+ * Содержит верхнюю панель с кнопкой выхода и боковую панель для навигации по разделам.
+ */
 public class MainLayout extends AppLayout {
     private final AuthenticationContext authenticationContext;
     private H2 viewTitle;
 
+    /**
+     * Конструктор, инициализирующий макет и добавляющий элементы навигации.
+     *
+     * @param authenticationContext контекст аутентификации для обработки выхода из системы
+     */
     public MainLayout(AuthenticationContext authenticationContext) {
         this.authenticationContext = authenticationContext;
         setPrimarySection(Section.DRAWER);

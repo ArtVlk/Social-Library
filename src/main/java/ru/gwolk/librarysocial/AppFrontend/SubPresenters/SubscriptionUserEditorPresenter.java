@@ -18,6 +18,10 @@ import ru.gwolk.librarysocial.AppBackend.Entities.UserBook;
 import ru.gwolk.librarysocial.AppBackend.SocialServices.CurrentUserService;
 import ru.gwolk.librarysocial.AppBackend.SocialServices.SubscriptionsService;
 
+/**
+ * Презентер для отображения и редактирования информации о пользователе, на которого подписан текущий пользователь.
+ * Этот класс управляет отображением информации о подписанном пользователе, его избранных книгах, обзорах и оценках.
+ */
 @SpringComponent
 @UIScope
 public class SubscriptionUserEditorPresenter extends VerticalLayout {
@@ -32,7 +36,13 @@ public class SubscriptionUserEditorPresenter extends VerticalLayout {
     private TextField review;
     private TextField userRating;
 
-
+    /**
+     * Конструктор, инициализирующий компоненты для отображения информации о подписанном пользователе.
+     *
+     * @param subscriptionsService Сервис для работы с подписками
+     * @param subscriptionsRepository Репозиторий для работы с подписками
+     * @param userRepository Репозиторий для работы с пользователями
+     */
     @Autowired
     public SubscriptionUserEditorPresenter(SubscriptionsService subscriptionsService,
                                            SubscriptionsRepository subscriptionsRepository,
@@ -91,7 +101,11 @@ public class SubscriptionUserEditorPresenter extends VerticalLayout {
         userRating.setVisible(true);
     }
 
-
+    /**
+     * Метод для отображения информации о подписанном пользователе.
+     *
+     * @param user Пользователь, на которого подписан текущий пользователь
+     */
     public void editSubscription(User user) {
         if (favouriteBooks.isVisible()) {
             favouriteBooks.setVisible(false);

@@ -2,6 +2,12 @@ package ru.gwolk.librarysocial.AppBackend.Entities;
 
 import jakarta.persistence.*;
 
+/**
+ * Сущность {@link PhoneNumber} представляет телефонный номер, связанный с пользователем.
+ * Этот класс используется для хранения информации о телефонных номерах пользователей в базе данных.
+ *
+ * Каждый номер телефона может быть привязан к одному пользователю, и может иметь тип (например, мобильный или домашний).
+ */
 @Entity
 @Table(name = "phoneNumbers")
 public class PhoneNumber {
@@ -13,10 +19,20 @@ public class PhoneNumber {
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    /**
+     * Конструктор для создания телефонного номера с указанным номером.
+     *
+     * @param number Номер телефона.
+     */
     public PhoneNumber(String number) {
         this.number = number;
     }
 
+
+    /**
+     * Конструктор по умолчанию для создания пустого телефонного номера.
+     */
     public PhoneNumber() {}
 
     public Long getId() {

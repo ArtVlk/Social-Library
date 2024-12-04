@@ -1,6 +1,7 @@
 package ru.gwolk.librarysocial.AppBackend.CRUDRepositories;
 
 import org.springframework.stereotype.Repository;
+import ru.gwolk.librarysocial.AppBackend.Entities.Subscription;
 import ru.gwolk.librarysocial.AppBackend.Entities.User;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -11,7 +12,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 /**
- * Репозиторий для работы с сущностью пользователя.
+ * Репозиторий для работы с сущностью {@link User}.
  * <p>
  * Предоставляет методы для выполнения CRUD-операций с пользователями, а также поиск пользователей по имени, полу и стране.
  * </p>

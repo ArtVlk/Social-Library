@@ -21,7 +21,10 @@ import ru.gwolk.librarysocial.AppBackend.Entities.Subscription;
 import java.util.Collection;
 import java.util.List;
 
-
+/**
+ * Сервис для редактирования пользователей в социальном приложении.
+ * Предоставляет функционал для подписки на других пользователей, их блокировки и отображения информации о пользователях.
+ */
 @Service
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class UserEditorService {
@@ -32,6 +35,14 @@ public class UserEditorService {
     private User me;
     private Grid<User> usersGrid;
 
+    /**
+     * Конструктор для инициализации сервиса редактирования пользователей.
+     *
+     * @param currentUserService сервис для получения текущего пользователя
+     * @param subscriptionsRepository репозиторий для работы с подписками
+     * @param userRepository репозиторий для работы с пользователями
+     * @param userBookRepository репозиторий для работы с книгами пользователя
+     */
     @Autowired
     public UserEditorService(CurrentUserService currentUserService,
                              SubscriptionsRepository subscriptionsRepository,
@@ -61,6 +72,11 @@ public class UserEditorService {
         return usersGrid;
     }
 
+    /**
+     * Получает текущего пользователя. Если текущий пользователь не был установлен ранее, он загружается через сервис.
+     *
+     * @return текущий пользователь
+     */
     private User getUser() {
         if (me == null) {
             me = currentUserService.getCurrentUser();
@@ -68,6 +84,13 @@ public class UserEditorService {
         return me;
     }
 
+    /**
+     * Подписывает текущего пользователя на указанного пользователя.
+     * Если подписка уже существует, возвращается {@code false}.
+     *
+     * @param user пользователь, на которого нужно подписаться
+     * @return {@code true}, если подписка была успешно добавлена, иначе {@code false}
+     */
     public boolean subscribe(User user) {
         me = getUser();
         Subscription findingSubscription = subscriptionsRepository.findSubscriptionByUserAndSubscribedUser(me, user);
@@ -82,7 +105,11 @@ public class UserEditorService {
         }
     }
 
-
+    /**
+     * Блокирует указанного пользователя: удаляет все подписки, связанные с этим пользователем, и удаляет его аккаунт.
+     *
+     * @param editingUser пользователь, которого нужно заблокировать
+     */
     public void ban(User editingUser) {
         List<Subscription> editingUserSubscriptions = subscriptionsRepository.findSubscriptionsByUser(editingUser);
         editingUserSubscriptions.forEach(s -> subscriptionsRepository.delete(s));

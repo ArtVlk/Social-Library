@@ -21,6 +21,10 @@ import ru.gwolk.librarysocial.AppBackend.SocialServices.UsersFilterService;
 
 import java.util.Collection;
 
+/**
+ * Презентер для страницы списка пользователей.
+ * Этот класс отображает таблицу пользователей с возможностью фильтрации и перехода к странице подписок.
+ */
 @Route(value = "", layout = MainLayout.class)
 @PageTitle("Пользователи")
 @PermitAll
@@ -32,6 +36,14 @@ public class UsersListPresenter extends VerticalLayout {
 
     private Grid<User> usersGrid;
 
+    /**
+     * Конструктор, инициализирующий компоненты страницы списка пользователей.
+     * Настроен для отображения таблицы пользователей, фильтрации и перехода к странице подписок.
+     *
+     * @param userRepository Репозиторий пользователей для получения списка пользователей
+     * @param userEditorPresenter Презентер для редактирования пользователя
+     * @param userEditorService Сервис для работы с пользователями
+     */
     @Autowired
     public UsersListPresenter(UserRepository userRepository,
                               UserEditorPresenter userEditorPresenter,

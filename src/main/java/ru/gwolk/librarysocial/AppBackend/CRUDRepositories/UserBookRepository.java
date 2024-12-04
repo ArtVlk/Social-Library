@@ -3,6 +3,7 @@ package ru.gwolk.librarysocial.AppBackend.CRUDRepositories;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 import ru.gwolk.librarysocial.AppBackend.Entities.Book;
+import ru.gwolk.librarysocial.AppBackend.Entities.Subscription;
 import ru.gwolk.librarysocial.AppBackend.Entities.User;
 import ru.gwolk.librarysocial.AppBackend.Entities.UserBook;
 
@@ -11,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Репозиторий для работы с сущностью книги, связанной с пользователем (UserBook).
+ * Репозиторий для работы с сущностью {@link UserBook}.
  * <p>
  * Предоставляет методы для выполнения CRUD-операций с пользовательскими книгами, а также различные способы поиска
  * и сортировки по критериям пользователя и книги.

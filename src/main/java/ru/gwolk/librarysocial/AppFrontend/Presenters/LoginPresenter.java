@@ -13,12 +13,21 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 
+/**
+ * Презентер для страницы входа в систему. Обрабатывает отображение формы входа и кнопку для перехода на страницу регистрации.
+ * Также обрабатывает ошибку входа, если она передана через параметры запроса.
+ */
 @Route("login")
 @PageTitle("Войти - SocialLibrary")
 @AnonymousAllowed
 public class LoginPresenter extends VerticalLayout implements BeforeEnterObserver {
     private LoginForm loginForm;
     private Button regButton;
+
+    /**
+     * Конструктор, который инициализирует форму для входа и кнопку для регистрации.
+     * Настроены стили и обработчики событий.
+     */
     public LoginPresenter() {
         loginForm = new LoginForm();
         regButton = new Button("Зарегистрироваться", VaadinIcon.ENTER.create());
@@ -34,6 +43,13 @@ public class LoginPresenter extends VerticalLayout implements BeforeEnterObserve
                 new Div("Если вы не зарегистрированы - нажмите Зарегистриоваться"),
                 loginForm, regButton);
     }
+
+    /**
+     * Метод, который вызывается перед загрузкой страницы.
+     * Проверяет, если в URL есть параметр "error", то устанавливает ошибку в форме входа.
+     *
+     * @param event Событие перед входом на страницу
+     */
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
         if (event.getLocation().getQueryParameters().getParameters().containsKey("error")) {

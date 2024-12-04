@@ -11,6 +11,10 @@ import jakarta.validation.constraints.NotBlank;
 
 import java.util.stream.Stream;
 
+/**
+ * Форма регистрации для ввода данных пользователя, включая имя, пароль, номер телефона и другие поля.
+ * Содержит валидацию обязательных полей и кнопку отправки.
+ */
 public class RegistrationForm extends FormLayout {
 
     @NotBlank
@@ -27,7 +31,9 @@ public class RegistrationForm extends FormLayout {
 
     private Button submitButton;
 
-
+    /**
+     * Конструктор формы регистрации, инициализирует все поля ввода и кнопку отправки.
+     */
     public RegistrationForm() {
         name = new TextField("Имя");
         password = new PasswordField("Пароль");

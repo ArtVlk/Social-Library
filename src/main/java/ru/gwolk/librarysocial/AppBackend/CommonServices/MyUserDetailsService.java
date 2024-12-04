@@ -20,18 +20,39 @@ import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+
+/**
+ * Сервис для загрузки информации о пользователе для аутентификации и авторизации.
+ * Реализует интерфейс UserDetailsService из Spring Security.
+ * Используется для работы с данными пользователя в системе.
+ */
 @Service
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class MyUserDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    /**
+     * Конструктор для инициализации репозиториев.
+     *
+     * @param userRepository репозиторий для работы с пользователями
+     * @param passwordEncoder кодировщик паролей
+     */
     @Autowired
     public MyUserDetailsService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
+
+    /**
+     * Загружает данные пользователя по имени (username).
+     * Если пользователь не найден, выбрасывает исключение UsernameNotFoundException.
+     *
+     * @param username имя пользователя
+     * @return объект UserDetails с данными пользователя
+     * @throws UsernameNotFoundException если пользователь не найден
+     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         try {
@@ -52,6 +73,15 @@ public class MyUserDetailsService implements UserDetailsService {
         collect.add(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()));
         return collect;
     }
+
+    /**
+     * Добавляет нового пользователя в систему, если такого пользователя ещё нет.
+     * В случае успешного добавления возвращает true.
+     * В случае если пользователь уже существует, возвращает false.
+     *
+     * @param user объект пользователя, которого нужно добавить
+     * @return true, если пользователь успешно добавлен, false в противном случае
+     */
     public boolean addUser(User user) {
         try {
             User userFromDb = userRepository.findByName(user.getName()).getFirst();
